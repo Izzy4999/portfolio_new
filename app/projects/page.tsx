@@ -20,9 +20,11 @@ export default async function ProjectsPage() {
     return acc;
   }, {} as Record<string, number>);
 
-  const featured = allProjects.find((project) => project?.slug === "umley")!;
-  const top2 = allProjects.find((project) => project?.slug === "resource")!;
-  const top3 = allProjects.find((project) => project?.slug === "teacherguide")!;
+  const featured = allProjects.find(
+    (project) => project?.slug === "vibes-meet"
+  )!;
+  const top2 = allProjects.find((project) => project?.slug === "umley")!;
+  const top3 = allProjects.find((project) => project?.slug === "resource")!;
   const sorted = allProjects
     .filter((p) => p.published)
     .filter(
