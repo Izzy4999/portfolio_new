@@ -6,6 +6,8 @@ const nextConfig = {
 	experimental: {
 		mdxRs: true,
 	},
+	// Satisfy Next.js 16: we have webpack config (from contentlayer) but use Turbopack
+	turbopack: {},
 };
 
 export default withContentlayer(nextConfig);
