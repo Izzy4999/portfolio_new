@@ -1,5 +1,51 @@
 import Groq from "groq-sdk";
+import { Resend } from "resend";
 import { NextRequest } from "next/server";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+async function notifyAIFailure(errorType: string, detail: string) {
+  try {
+    await resend.emails.send({
+      from: "Portfolio Monitor <noreply@fiittech.fun>",
+      to: "princeisrael409@gmail.com",
+      subject: `⚠️ Portfolio AI Alert: ${errorType}`,
+      html: `
+        <div style="font-family: -apple-system, sans-serif; max-width: 560px; margin: 0 auto; background: #09090b; color: #e4e4e7; padding: 32px; border-radius: 12px; border: 1px solid #27272a;">
+          <h2 style="color: #f87171; margin: 0 0 16px; font-size: 18px;">⚠️ AI Chat Alert</h2>
+          <p style="color: #a1a1aa; font-size: 14px; margin: 0 0 20px; line-height: 1.6;">
+            Your portfolio's AI chat encountered an issue. Visitors may currently be unable to use the chat.
+          </p>
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+              <td style="padding: 10px 0; border-bottom: 1px solid #27272a; color: #71717a; font-size: 13px; width: 100px;">Error type</td>
+              <td style="padding: 10px 0; border-bottom: 1px solid #27272a; color: #f87171; font-size: 13px; font-weight: 600;">${errorType}</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px 0; border-bottom: 1px solid #27272a; color: #71717a; font-size: 13px;">Detail</td>
+              <td style="padding: 10px 0; border-bottom: 1px solid #27272a; color: #f4f4f5; font-size: 13px;">${detail}</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px 0; color: #71717a; font-size: 13px;">Time</td>
+              <td style="padding: 10px 0; color: #f4f4f5; font-size: 13px;">${new Date().toUTCString()}</td>
+            </tr>
+          </table>
+          <div style="margin-top: 24px; display: flex; gap: 12px; flex-wrap: wrap;">
+            <a href="https://console.groq.com" style="display: inline-block; padding: 10px 20px; background: #27272a; color: #f4f4f5; border-radius: 8px; text-decoration: none; font-size: 13px; border: 1px solid #3f3f46;">
+              Groq Console
+            </a>
+            <a href="https://vercel.com/dashboard" style="display: inline-block; padding: 10px 20px; background: #27272a; color: #f4f4f5; border-radius: 8px; text-decoration: none; font-size: 13px; border: 1px solid #3f3f46;">
+              Vercel Logs
+            </a>
+          </div>
+          <p style="margin-top: 24px; font-size: 11px; color: #3f3f46;">fiittech.fun — automated alert</p>
+        </div>
+      `,
+    });
+  } catch {
+    // Silently fail — don't let notification errors break anything
+  }
+}
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
@@ -88,7 +134,20 @@ export async function POST(req: NextRequest): Promise<Response> {
         "X-Accel-Buffering": "no",
       },
     });
-  } catch {
+  } catch (err: unknown) {
+    const status = (err as { status?: number })?.status;
+    const message = (err as { message?: string })?.message ?? "Unknown error";
+
+    if (status === 401) {
+      await notifyAIFailure("Invalid API Key", "The Groq API key is invalid or has been revoked. Update it in Vercel environment variables.");
+    } else if (status === 429) {
+      await notifyAIFailure("Rate Limit / Quota Exceeded", message);
+    } else if (status === 503 || status === 500) {
+      await notifyAIFailure("Groq Service Unavailable", message);
+    } else {
+      await notifyAIFailure("Unexpected Error", `Status ${status ?? "unknown"}: ${message}`);
+    }
+
     return new Response(JSON.stringify({ error: "Failed to get a response" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
