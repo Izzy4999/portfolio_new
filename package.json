@@ -50,7 +50,10 @@
     "onlyBuiltDependencies": [
       "contentlayer2",
       "esbuild",
-      "@prisma/engines"
+      "protobufjs",
+      "rome",
+      "sharp",
+      "unrs-resolver"
     ],
     "overrides": {
       "@opentelemetry/api": "1.4.1",
