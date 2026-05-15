@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import LocalFont from "next/font/local";
 import { Metadata } from "next";
 import { Analytics } from "./components/analytics";
+import { ChatWidget } from "./components/chat-widget";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://portfolio-new-theta-amber.vercel.app"),
@@ -71,6 +72,7 @@ export default function RootLayout({
         }`}
       >
         {children}
+        <ChatWidget />
       </body>
     </html>
   );
