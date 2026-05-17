@@ -44,7 +44,7 @@
     "tailwindcss-debug-screens": "^2.2.1"
   },
   "engines": {
-    "node": ">=20.9.0"
+    "node": "20.x"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
