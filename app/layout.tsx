@@ -11,7 +11,7 @@ import { CurtainIntro } from "./components/CurtainIntro";
 import { Providers } from "./components/canopy/Providers";
 import { ChatWidget } from "./components/chat-widget";
 
-const SITE_TITLE = "fiittech.com";
+const SITE_TITLE = `${SITE.wordmark} · ${SITE.role}, ${SITE.city}`;
 const SITE_DESCRIPTION = `${SITE.name}. ${SITE.tagline}`;
 // PNG fallback for browsers that ignore SVG icons; rendered from public/favicon.svg.
 const FAVICON_PNG = "/favicon.png";
@@ -19,7 +19,7 @@ const FAVICON_PNG = "/favicon.png";
 export const metadata: Metadata = {
 	metadataBase: new URL(SITE.url),
 	title: {
-		default: `${SITE.name} | ${SITE_TITLE}`,
+		default: SITE_TITLE,
 		template: `%s | ${SITE.name}`,
 	},
 	description: SITE_DESCRIPTION,
@@ -27,8 +27,7 @@ export const metadata: Metadata = {
 		title: SITE_TITLE,
 		description: SITE_DESCRIPTION,
 		url: SITE.url,
-		siteName: SITE_TITLE,
-		images: [{ url: `${SITE.url}/og.png`, width: 1920, height: 1080 }],
+		siteName: SITE.wordmark,
 		locale: "en-US",
 		type: "website",
 	},
@@ -44,7 +43,8 @@ export const metadata: Metadata = {
 		},
 	},
 	twitter: {
-		title: "Fiittech",
+		title: SITE_TITLE,
+		description: SITE_DESCRIPTION,
 		card: "summary_large_image",
 	},
 	icons: {
