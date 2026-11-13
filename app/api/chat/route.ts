@@ -41,10 +41,14 @@ async function notifyAIFailure(errorType: string, detail: string) {
         </div>
       `,
     });
-  } catch {
-    // Silently fail — don't let notification errors break anything
+  } catch (notifyErr: unknown) {
+    // Never let the alert email break the chat response, but leave a trace in the logs.
+    console.error("[chat] failure alert email not sent:", notifyErr);
   }
 }
+
+// Groq retires models (llama-3.3-70b-versatile died 2026-08-16); GROQ_MODEL lets you swap models without a code change.
+const GROQ_MODEL = process.env.GROQ_MODEL ?? "openai/gpt-oss-120b";
 
 const SYSTEM_PROMPT = `You are an AI assistant on Favour Israel Taiwo's portfolio website. Help visitors learn about Favour and his work.
 
@@ -103,11 +107,15 @@ When a visitor expresses interest in hiring, collaborating with, or contacting F
 
 export async function POST(req: NextRequest): Promise<Response> {
   try {
+    const apiKey = process.env.GROQ_API_KEY;
+    if (!apiKey) throw Object.assign(new Error("GROQ_API_KEY is not set in this environment"), { status: 401 });
+
     const { messages } = await req.json();
-    const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+    const groq = new Groq({ apiKey });
 
     const stream = await groq.chat.completions.create({
-      model: "llama-3.3-70b-versatile",
+      model: GROQ_MODEL,
+      reasoning_effort: "low",
       messages: [{ role: "system", content: SYSTEM_PROMPT }, ...messages],
       stream: true,
       max_tokens: 1024,
@@ -135,6 +143,7 @@ export async function POST(req: NextRequest): Promise<Response> {
   } catch (err: unknown) {
     const status = (err as { status?: number })?.status;
     const message = (err as { message?: string })?.message ?? "Unknown error";
+    console.error(`[chat] Groq request failed (status ${status ?? "unknown"}): ${message}`);
 
     if (status === 401) {
       await notifyAIFailure("Invalid API Key", "The Groq API key is invalid or has been revoked. Update it in Vercel environment variables.");
