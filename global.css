@@ -3,8 +3,220 @@
 @tailwind utilities;
 
 @layer base {
-  .text-edge-outline {
-    -webkit-text-stroke: 1px rgba(255,255,255,0.3);
+  html {
+    scrollbar-color: #2b2f7f #f7f6f2;
   }
-} 
 
+  ::selection {
+    background: #f2b31a;
+    color: #1f2263;
+  }
+
+  :focus-visible {
+    outline: 2px solid #b23a65;
+    outline-offset: 3px;
+  }
+
+  input,
+  textarea {
+    caret-color: #b23a65;
+  }
+}
+
+@layer components {
+  .caps {
+    @apply text-[0.6875rem] uppercase leading-none tracking-[0.28em];
+  }
+
+  .btn {
+    @apply inline-flex h-12 items-center justify-center whitespace-nowrap rounded-sm px-8 text-xs uppercase tracking-[0.28em] transition-[transform,background-color,color] duration-200 ease-out-strong active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply bg-indigo text-white hover:bg-indigo-deep;
+  }
+
+  .btn-secondary {
+    @apply border border-indigo bg-cloud text-indigo hover:bg-indigo hover:text-white;
+  }
+
+  .arrow-link {
+    @apply inline-flex items-center gap-4 text-[0.6875rem] uppercase leading-none tracking-[0.28em] text-indigo underline-offset-8 hover:underline;
+  }
+
+  .field {
+    @apply h-12 w-full rounded-sm border border-indigo/40 bg-white px-4 text-base text-indigo outline-none transition-colors duration-150 placeholder:text-indigo/80 focus:border-indigo;
+  }
+}
+
+@layer utilities {
+  /* Kept for the unfinished /admin area */
+  .bg-grain {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' fill='white' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+  }
+
+  .bg-dot-grid {
+    background-image: radial-gradient(rgba(244, 244, 242, 0.14) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  .bg-crosshatch {
+    background-image: repeating-linear-gradient(
+      45deg,
+      rgba(244, 244, 242, 0.05) 0,
+      rgba(244, 244, 242, 0.05) 1px,
+      transparent 1px,
+      transparent 10px
+    );
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 24s linear infinite;
+}
+
+@keyframes silk-drift {
+  from {
+    transform: translate3d(0, 0, 0) skewY(0deg);
+  }
+  to {
+    transform: translate3d(var(--silk-x, 18px), var(--silk-y, 10px), 0) skewY(var(--silk-skew, 1.2deg));
+  }
+}
+
+.silk-band {
+  animation: silk-drift var(--silk-time, 14s) ease-in-out infinite alternate;
+  transform-origin: 0 0;
+}
+
+/* Curtain intro (app/components/CurtainIntro.tsx). The timing variables are
+   set inline on .curtain-intro from lib/curtain/constants.ts. */
+/* A flat panel in the closed curtain's colours, behind the cloth. It is
+   hidden unless one of the two rules below shows it. */
+.curtain-cover {
+  opacity: 0;
+  background: linear-gradient(
+    90deg,
+    theme(colors.indigo.DEFAULT) 10%,
+    theme(colors.plum) 32%,
+    theme(colors.madder) 45%,
+    theme(colors.saffron) 50%,
+    theme(colors.madder) 55%,
+    theme(colors.plum) 68%,
+    theme(colors.indigo.DEFAULT) 90%
+  );
+}
+
+/* Full page load: the curtain is shut from the first paint, before the first
+   WebGL frame exists. */
+.curtain-intro[data-kind="open"][data-phase="pending"] .curtain-cover {
+  opacity: 1;
+}
+
+/* Page change: fades in behind the still-swinging cloth so the swap is never
+   seen, then out again as the curtain starts to open. */
+.curtain-intro[data-kind="close-then-open"] .curtain-cover {
+  transition: opacity 250ms ease;
+}
+
+.curtain-intro[data-cover="on"] .curtain-cover {
+  opacity: 1;
+}
+
+.curtain-letter {
+  display: inline-block;
+  transform: translateY(115%);
+}
+
+/* --k is the letter's distance from the middle of the name: the centre
+   letters rise first, the same way the curtain uncovers them. */
+.curtain-intro[data-phase="playing"][data-name="show"] .curtain-letter {
+  animation: curtain-rise 700ms theme(transitionTimingFunction.out-strong)
+    calc(var(--curtain-name-at) + var(--k) * var(--curtain-letter-stagger)) forwards;
+}
+
+/* The backdrop exists only for the name. Every other play moves the cloth
+   directly over the page. */
+.curtain-intro:not([data-name="show"]) .curtain-scrim {
+  display: none;
+}
+
+.curtain-intro[data-phase="playing"][data-name="show"] .curtain-scrim {
+  animation: curtain-fade 600ms theme(transitionTimingFunction.out-strong) var(--curtain-fade-at) forwards;
+}
+
+@keyframes curtain-rise {
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes curtain-fade {
+  to {
+    opacity: 0;
+  }
+}
+
+/* Chat mascot (app/components/ChatBotMascot.tsx). Only the launcher is
+   "alive"; the avatars inside the chat panel stay still. */
+@keyframes chat-bot-float {
+  to {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes chat-bot-blink {
+  0%,
+  93%,
+  100% {
+    transform: scaleY(1);
+  }
+  96.5% {
+    transform: scaleY(0.1);
+  }
+}
+
+.chat-bot-alive {
+  animation: chat-bot-float 2.2s ease-in-out infinite alternate;
+}
+
+.chat-bot-alive .chat-bot-eyes {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: chat-bot-blink 5s ease-in-out infinite;
+}
+
+/* Logo (app/components/canopy/LogoMark.tsx): the I is a text cursor. */
+@keyframes logo-cursor-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.logo-cursor {
+  animation: logo-cursor-blink 1.2s steps(1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-cursor,
+  .animate-marquee,
+  .silk-band,
+  .chat-bot-alive,
+  .chat-bot-alive .chat-bot-eyes {
+    animation: none;
+  }
+
+  /* no moving fabric for these visitors: the site shows straight away */
+  .curtain-intro {
+    display: none;
+  }
+}

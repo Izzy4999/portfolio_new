@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Poster directions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0e1014;font-family:"Archivo",sans-serif;color:#fff;padding:28px 16px 80px}
+a{color:inherit;text-decoration:none}
+.intro{max-width:1280px;margin:0 auto 34px}
+.intro h1{font-size:26px;font-weight:700}
+.intro p{color:#a4a9b4;margin-top:8px;max-width:64ch;line-height:1.5}
+.tag{max-width:1280px;margin:0 auto 12px;display:flex;gap:10px 18px;flex-wrap:wrap;align-items:baseline}
+.tag b{font-size:20px}.tag span{color:#a4a9b4;font-size:15px}
+
+/* shared poster grammar */
+.poster{--ease:cubic-bezier(.23,1,.32,1);max-width:1280px;margin:0 auto 64px;background:var(--bg);color:var(--fg);padding:22px clamp(18px,3.4vw,48px) clamp(36px,5vw,64px);position:relative;overflow:hidden}
+.poster ::selection{background:var(--fg);color:var(--bg)}
+.poster nav{display:flex;justify-content:space-between;align-items:center;gap:14px;font-weight:600;font-size:15px}
+.poster nav div{display:flex;gap:clamp(12px,2.2vw,28px);align-items:center}
+.caps{font-stretch:112%;font-weight:900;text-transform:uppercase;letter-spacing:-.025em;line-height:.9}
+.plate{display:inline-block;background:var(--plate);color:var(--plate-fg);font-weight:800;text-transform:uppercase;font-stretch:108%;padding:.22em .6em;line-height:1.05}
+.btn{display:inline-block;background:var(--btn);color:var(--btn-fg);font-weight:800;text-transform:uppercase;font-size:15px;letter-spacing:.02em;padding:15px 24px;transition:transform .16s var(--ease)}
+.btn:hover{transform:translateY(-2px)}.btn:active{transform:scale(.97)}
+.link{font-weight:700;border-bottom:2px solid currentColor;padding-bottom:1px}
+.spec{display:grid;grid-template-columns:auto 1fr;gap:10px 16px;align-items:baseline;font-size:clamp(15px,1.35vw,18px);line-height:1.35}
+.spec dt{justify-self:start}.spec dt .plate{font-size:.82em}
+.spec dd b{font-weight:800}
+.card{background:var(--card);color:var(--card-fg);border:5px solid var(--card-edge);box-shadow:0 26px 50px -22px rgba(0,0,0,.55);transition:transform .4s var(--ease);position:relative}
+.card:hover{transform:rotate(0) translateY(-8px) scale(1.02)!important;z-index:5}
+.shot{aspect-ratio:16/10;background:repeating-linear-gradient(135deg,rgba(255,255,255,.07) 0 14px,rgba(255,255,255,.02) 14px 28px);display:grid;place-items:center;font-family:"Geist Mono",monospace;font-size:13px;color:#aeb4c2;text-align:center;padding:10px}
+.shot.tall{aspect-ratio:9/17}
+.cap{font-family:"Geist Mono",monospace;font-size:13px;padding:10px 12px;border-top:1px solid rgba(255,255,255,.14)}
+.burst{position:absolute;width:86px;height:86px;display:grid;place-items:center;background:var(--burst);color:#fff;font-weight:900;font-size:19px;letter-spacing:.02em;transform:rotate(12deg);clip-path:polygon(50% 0,61% 12%,75% 4%,79% 20%,96% 21%,90% 36%,100% 50%,90% 64%,96% 79%,79% 80%,75% 96%,61% 88%,50% 100%,39% 88%,25% 96%,21% 80%,4% 79%,10% 64%,0 50%,10% 36%,4% 21%,21% 20%,25% 4%,39% 12%)}
+.under{margin-top:clamp(40px,6vw,76px)}
+.under h3{font-size:clamp(22px,2.6vw,34px);font-weight:800;max-width:22ch;line-height:1.1;letter-spacing:-.01em}
+
+/* ---------- 1: The Bill ---------- */
+.p1{--bg:#0b7a4b;--fg:#fff;--plate:#bff3d6;--plate-fg:#06281a;--btn:#fff;--btn-fg:#06281a;--card:#0c1512;--card-fg:#eef4f0;--card-edge:#fff;--burst:#e9412c}
+.p1 .hero{display:grid;grid-template-columns:1.25fr .9fr;gap:clamp(20px,4vw,56px);align-items:center;margin-top:clamp(20px,3vw,40px)}
+.p1 h2{font-size:clamp(46px,8.4vw,120px)}
+.p1 h2 .plate{font-size:.5em;transform:rotate(-2deg);margin-top:.28em;letter-spacing:-.01em}
+.p1 .spec{margin:28px 0 30px}
+.p1 .stage{position:relative;aspect-ratio:1;display:grid;place-items:center}
+.p1 .stage::before{content:"";position:absolute;inset:6%;border-radius:50%;background:#bff3d6;opacity:.28}
+.p1 .stage .card{width:84%;transform:rotate(5deg)}
+.p1 .stage .phone{position:absolute;width:26%;left:2%;bottom:6%;transform:rotate(-8deg)}
+.p1 .burst{right:2%;top:10%}
+.p1 .stage .plate{position:absolute;bottom:9%;right:8%;transform:rotate(5deg);background:#06281a;color:#fff;font-size:18px}
+.p1 .lines{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,4vw,56px);align-items:start;margin-top:26px}
+.p1 .lines a{display:block;background:#fff;color:#06281a;font-weight:700;padding:14px 18px;margin-bottom:8px;transition:background .18s,color .18s,transform .25s var(--ease)}
+.p1 .lines a:hover,.p1 .lines a.on{background:#06281a;color:#fff;transform:translateX(8px)}
+
+/* ---------- 2: The Wall ---------- */
+.p2{--bg:#d2341c;--fg:#fff;--plate:#15100e;--plate-fg:#fff;--btn:#15100e;--btn-fg:#fff;--card:#15100e;--card-fg:#f6efec;--card-edge:#fff;--burst:#1d3fd0}
+.p2 h2{font-size:clamp(54px,12.6vw,186px);margin-top:clamp(16px,2.6vw,34px);font-stretch:100%}
+.p2 h2 span{display:block}
+.p2 h2 .out{-webkit-text-stroke:.022em #fff;color:transparent}
+.p2 .row{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end;margin-top:22px}
+.p2 .row p{font-size:clamp(17px,1.6vw,22px);max-width:46ch;font-weight:500;line-height:1.4}
+.p2 .wall{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:clamp(34px,5vw,60px) -10px 0;align-items:end}
+.p2 .wall .card:nth-child(1){transform:rotate(-5deg)}
+.p2 .wall .card:nth-child(2){transform:rotate(3deg) translateY(-22px);margin-left:-22px}
+.p2 .wall .card:nth-child(3){transform:rotate(-2deg);margin-left:-22px}
+.p2 .wall .card:nth-child(4){transform:rotate(6deg) translateY(-14px);margin-left:-22px}
+.p2 .burst{top:-30px;right:-22px}
+.p2 .tape{margin:clamp(34px,5vw,56px) calc(-1*clamp(18px,3.4vw,48px)) 0;background:#15100e;color:#fff;padding:14px 0;white-space:nowrap;overflow:hidden;font-weight:900;text-transform:uppercase;font-size:22px;font-stretch:112%}
+.p2 .tape div{display:inline-block;animation:tape 26s linear infinite}
+@keyframes tape{to{transform:translateX(-50%)}}
+
+/* ---------- 3: The Sheet (light) ---------- */
+.p3{--bg:#eceee8;--fg:#12261d;--plate:#12261d;--plate-fg:#fff;--btn:#087a4d;--btn-fg:#fff;--card:#12261d;--card-fg:#eef4f0;--card-edge:#12261d;--burst:#087a4d}
+.p3 .hero{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,4vw,60px);margin-top:clamp(20px,3vw,40px);align-items:start}
+.p3 h2{font-size:clamp(44px,7.4vw,104px)}
+.p3 h2 em{font-style:normal;color:#087a4d}
+.p3 .spec{margin:28px 0 30px;border-top:4px solid #12261d;padding-top:20px}
+.p3 .pile{position:relative;min-height:520px}
+.p3 .pile .card{position:absolute;width:74%}
+.p3 .pile .card:nth-child(1){top:0;right:0;transform:rotate(4deg)}
+.p3 .pile .card:nth-child(2){top:150px;left:0;transform:rotate(-5deg)}
+.p3 .pile .card:nth-child(3){top:310px;right:6%;transform:rotate(2deg)}
+.p3 .burst{top:-26px;left:-20px}
+.p3 .card .plate{position:absolute;left:-5px;bottom:-16px;background:#087a4d;font-size:17px}
+.p3 .index{margin-top:26px;border-top:4px solid #12261d}
+.p3 .index a{display:grid;grid-template-columns:1.2fr 2fr auto;gap:16px;padding:14px 8px;border-bottom:1px solid #b9c2ba;align-items:baseline;transition:background .18s,color .18s,padding .25s var(--ease)}
+.p3 .index a:hover{background:#12261d;color:#fff;padding-left:18px}
+.p3 .index b{font-weight:900;text-transform:uppercase;font-stretch:112%;font-size:clamp(17px,1.9vw,24px)}
+.p3 .index time{font-family:"Geist Mono",monospace;font-size:14px}
+
+@media (max-width:860px){
+ .p1 .hero,.p1 .lines,.p3 .hero,.p2 .row{grid-template-columns:1fr}
+ .p2 .wall{grid-template-columns:1fr 1fr;row-gap:26px}.p2 .wall .card{margin-left:0!important}
+ .p3 .pile{min-height:0;display:grid;gap:34px;margin-top:20px}.p3 .pile .card{position:relative;width:100%;top:auto!important;left:auto!important;right:auto!important}
+ .p3 .index a{grid-template-columns:1fr auto}.p3 .index span{display:none}
+ .poster nav div a:not(.btn){display:none}
+}
+@media (prefers-reduced-motion:reduce){.p2 .tape div{animation:none}*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="intro">
+  <h1>Three portfolio designs in the lectern.fun style</h1>
+  <p>Same grammar as Lectern: one colour floods the page, huge heavy capitals, label plates, tilted sticker cards and a LIVE burst. Each uses its own colour so the portfolio is not a copy of Lectern. Striped boxes are where your real screenshots go.</p>
+</div>
+
+<!-- 1 -->
+<div class="tag"><b>1. The Bill</b><span>Closest to Lectern. A handbill for an engineer: headline, facts in label plates, one featured product on stage.</span></div>
+<section class="poster p1">
+  <nav><span>Favour Israel Taiwo</span><div><a href="#">Work</a><a href="#">About</a><a class="btn" href="#">Hire Favour</a></div></nav>
+  <div class="hero">
+    <div>
+      <h2 class="caps">One engineer.<br>Web and mobile.<br><span class="plate">Shipped and live.</span></h2>
+      <dl class="spec">
+        <dt><span class="plate">Role</span></dt><dd><b>Software engineer.</b> Frontend, backend, database, deployment.</dd>
+        <dt><span class="plate">Builds</span></dt><dd>Web apps, mobile apps, AI and WhatsApp tools</dd>
+        <dt><span class="plate">Stack</span></dt><dd>Next.js, React Native, Node.js, Go</dd>
+        <dt><span class="plate">Based</span></dt><dd><b>Lagos.</b> Open to roles and contracts.</dd>
+      </dl>
+      <a class="btn" href="#">Hire Favour</a> &nbsp; <a class="link" href="#">See the work</a>
+    </div>
+    <div class="stage">
+      <div class="card"><div class="shot">Vibes Meet web screenshot</div><div class="cap">vibesmeet / web app</div></div>
+      <div class="card phone"><div class="shot tall">mobile screenshot</div></div>
+      <span class="burst">LIVE</span>
+      <span class="plate">Vibes Meet</span>
+    </div>
+  </div>
+  <div class="under">
+    <h3>Pick a product. See its web screen and its phone screen side by side.</h3>
+    <div class="lines">
+      <div><a class="on" href="#">Vibes Meet: events and social app that pays its hosts</a><a href="#">Pulse: survey as a service platform</a><a href="#">BroadcastHub: WhatsApp broadcast and call center</a><a href="#">AISHA: analytics for an AI assistant</a></div>
+      <div class="card" style="transform:rotate(-2deg)"><div class="shot">selected product screenshot</div><div class="cap">web + mobile, 2025</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 2 -->
+<div class="tag"><b>2. The Wall</b><span>Loudest. The name is the poster, and the work is pasted across it like stickers.</span></div>
+<section class="poster p2">
+  <nav><span>Favour Israel Taiwo</span><div><a href="#">Work</a><a href="#">About</a><a class="btn" href="#">Hire Favour</a></div></nav>
+  <h2 class="caps"><span>Favour</span><span class="out">builds</span><span>apps.</span></h2>
+  <div class="row">
+    <p>Software engineer in Lagos. I build the web app, the mobile app and the backend behind both.</p>
+    <a class="btn" href="#">Hire Favour</a>
+  </div>
+  <div class="wall">
+    <a class="card" href="#"><div class="shot">Vibes Meet</div><div class="cap">Vibes Meet / 2025</div><span class="burst">LIVE</span></a>
+    <a class="card" href="#"><div class="shot">Pulse</div><div class="cap">Pulse / 2025</div></a>
+    <a class="card" href="#"><div class="shot">BroadcastHub</div><div class="cap">BroadcastHub / 2025</div></a>
+    <a class="card" href="#"><div class="shot">AISHA</div><div class="cap">AISHA / 2025</div></a>
+  </div>
+  <div class="tape"><div>Next.js / React Native / TypeScript / Node.js / Go / PostgreSQL / Next.js / React Native / TypeScript / Node.js / Go / PostgreSQL / </div></div>
+</section>
+
+<!-- 3 -->
+<div class="tag"><b>3. The Sheet</b><span>The light palette you liked, in the Lectern grammar. Calmest, quickest to scan.</span></div>
+<section class="poster p3">
+  <nav><span>Favour Israel Taiwo</span><div><a href="#">Work</a><a href="#">About</a><a class="btn" href="#">Hire Favour</a></div></nav>
+  <div class="hero">
+    <div>
+      <h2 class="caps">I build the <em>web app</em> and the <em>mobile app.</em></h2>
+      <dl class="spec">
+        <dt><span class="plate">Role</span></dt><dd><b>Software engineer,</b> full stack</dd>
+        <dt><span class="plate">Stack</span></dt><dd>Next.js, React Native, Node.js, Go</dd>
+        <dt><span class="plate">Based</span></dt><dd><b>Lagos.</b> Open to roles and contracts.</dd>
+      </dl>
+      <a class="btn" href="#">Hire Favour</a> &nbsp; <a class="link" href="#">See the work</a>
+    </div>
+    <div class="pile">
+      <a class="card" href="#"><div class="shot">Vibes Meet screenshot</div><span class="plate">Vibes Meet</span><span class="burst">LIVE</span></a>
+      <a class="card" href="#"><div class="shot">Pulse screenshot</div><span class="plate">Pulse</span></a>
+      <a class="card" href="#"><div class="shot">BroadcastHub screenshot</div><span class="plate">BroadcastHub</span></a>
+    </div>
+  </div>
+  <div class="under">
+    <h3>Fourteen products, newest first.</h3>
+    <div class="index">
+      <a href="#"><b>AISHA Analytics</b><span>Dashboard for AI assistant and WhatsApp conversations</span><time>2025</time></a>
+      <a href="#"><b>Umley</b><span>Rent, house bills and maintenance requests for tenants</span><time>2024</time></a>
+      <a href="#"><b>GeduClinic</b><span>Hospital management system</span><time>2024</time></a>
+    </div>
+  </div>
+</section>
+</body>
+</html>

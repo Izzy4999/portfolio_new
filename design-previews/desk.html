@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--desk:#d8dccf;--desk2:#c9cebf;--ink:#1d2420;--soft:#3c453e;--metal:#e9ebe6;--metal2:#bfc4bb;--accent:#ff5b3a;--hue:160;--ease:cubic-bezier(.23,1,.32,1)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:"Bricolage Grotesque",sans-serif;color:var(--ink);background:radial-gradient(120% 90% at 30% 10%,#e6e9de 0%,var(--desk) 45%,var(--desk2) 100%);overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
+::selection{background:var(--accent);color:#fff}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+
+.desk{position:fixed;inset:0;perspective:1600px}
+.hint{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);font-size:14px;color:var(--soft);background:rgba(255,255,255,.55);padding:6px 14px;border-radius:999px;white-space:nowrap}
+
+/* devices: the work itself, web and phone together */
+.rig{position:absolute;left:50%;top:50%;width:min(880px,86vw);transform:translate(-50%,-52%) rotateX(calc(var(--ty,0)*1deg + 10deg)) rotateY(calc(var(--tx,0)*1deg));transform-style:preserve-3d;transition:transform .5s var(--ease);pointer-events:none}
+.laptop{width:78%;position:relative}
+.lid{background:linear-gradient(#2a2f2c,#161a18);border-radius:16px 16px 4px 4px;padding:12px 12px 14px;box-shadow:0 40px 60px -30px rgba(20,30,24,.55),0 2px 0 #fff3 inset}
+.base{height:16px;margin:0 -5%;background:linear-gradient(var(--metal),var(--metal2));border-radius:3px 3px 14px 14px;box-shadow:0 30px 40px -18px rgba(20,30,24,.5);position:relative}
+.base::after{content:"";position:absolute;left:50%;top:0;width:16%;height:6px;transform:translateX(-50%);background:#a9aea5;border-radius:0 0 8px 8px}
+.phone{position:absolute;right:0;bottom:-6%;width:21%;background:linear-gradient(#2a2f2c,#161a18);border-radius:28px;padding:8px;transform:translateZ(60px) rotate(4deg);box-shadow:0 40px 50px -22px rgba(20,30,24,.6),0 2px 0 #fff3 inset}
+.screen{position:relative;overflow:hidden;border-radius:6px;aspect-ratio:16/10;background:hsl(var(--hue) 45% 22%);color:#fff}
+.phone .screen{aspect-ratio:9/19;border-radius:21px}
+.view{position:absolute;inset:0;padding:6% 7%;display:flex;flex-direction:column;justify-content:space-between;background:
+  radial-gradient(90% 70% at 85% 10%,hsl(calc(var(--hue) + 40) 80% 62% / .9),transparent 60%),
+  radial-gradient(80% 80% at 10% 100%,hsl(calc(var(--hue) - 30) 70% 45%),transparent 65%),
+  hsl(var(--hue) 50% 24%);transition:clip-path .55s var(--ease)}
+.view.out{clip-path:inset(0 0 100% 0)}
+.view small{font-size:clamp(9px,1vw,13px);opacity:.85}
+.view h2{font-size:clamp(18px,3.2vw,44px);font-weight:600;letter-spacing:-.02em;line-height:1.02}
+.view p{font-size:clamp(10px,1.2vw,16px);max-width:34ch;line-height:1.35;margin-top:.5em;opacity:.92}
+.phone .view h2{font-size:clamp(11px,1.5vw,20px)}
+.phone .view p{display:none}
+.bar{display:flex;gap:5px}.bar i{width:8px;height:8px;border-radius:50%;background:#fff6}
+
+/* loose things on the desk: all draggable */
+.thing{position:absolute;touch-action:none;cursor:grab;transform:translate(var(--x),var(--y)) rotate(var(--r));transition:box-shadow .2s,scale .2s var(--ease);will-change:transform}
+.thing.drag{cursor:grabbing;scale:1.06;transition:none}
+.note{width:150px;min-height:120px;padding:14px 14px 12px;background:hsl(var(--h) 88% 80%);box-shadow:0 14px 18px -10px rgba(20,30,24,.45),0 1px 0 #fff8 inset;font-family:"Caveat",cursive;text-align:left;display:flex;flex-direction:column;justify-content:space-between;border-radius:2px 2px 14px 2px}
+.note b{font-size:26px;font-weight:700;line-height:1}
+.note span{font-size:19px;line-height:1.05;color:#2b332e}
+.note.on{outline:3px solid var(--ink);outline-offset:3px}
+.note.drag,.card.drag{box-shadow:0 34px 30px -14px rgba(20,30,24,.4)}
+.card{width:260px;background:#fbfbf8;padding:20px 20px 18px;border-radius:6px;box-shadow:0 16px 22px -12px rgba(20,30,24,.45);text-align:left}
+.card h1{font-size:19px;font-weight:600;letter-spacing:-.01em}
+.card p{font-size:14px;color:var(--soft);margin-top:4px;line-height:1.4}
+.card a{display:inline-block;margin-top:12px;font-size:14px;font-weight:600;color:var(--ink);border-bottom:2px solid var(--accent);text-decoration:none}
+.chip{background:var(--ink);color:#fff;font-size:14px;font-weight:500;padding:9px 14px;border-radius:999px;box-shadow:0 10px 14px -8px rgba(20,30,24,.6)}
+.key{width:74px;height:74px;border-radius:16px;background:linear-gradient(#ff8a70,var(--accent));color:#2a0d05;font-weight:700;font-size:15px;box-shadow:0 8px 0 #c43a1f,0 22px 20px -8px rgba(20,30,24,.5);display:grid;place-items:center}
+.key:active{translate:0 6px;box-shadow:0 2px 0 #c43a1f,0 10px 12px -8px rgba(20,30,24,.5)}
+
+/* phones: no dragging, devices on top, notes in a tray */
+@media (max-width:760px){
+  body{overflow:auto;touch-action:auto}
+  .desk{position:static;perspective:none;padding:18px 16px 30px;display:flex;flex-direction:column;gap:20px}
+  .rig{position:relative;left:auto;top:auto;width:100%;transform:none;order:2;pointer-events:auto;margin-bottom:8%}
+  .thing{position:static;transform:rotate(var(--r));cursor:pointer}
+  .card{order:1;width:100%;--r:0deg}
+  .tray{order:3;display:flex;gap:14px;overflow-x:auto;padding:14px 4px 18px;margin:0 -16px;padding-left:16px;scroll-snap-type:x mandatory}
+  .tray .note{flex:none;scroll-snap-align:start}
+  .loose{order:4;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .hint{display:none}
+}
+@media (min-width:761px){.tray,.loose{display:contents}}
+@media (prefers-reduced-motion:reduce){.rig,.view,.thing{transition:none!important}}
+</style>
+</head>
+<body>
+<main class="desk" id="desk">
+  <div class="thing card" style="--x:5vw;--y:8vh;--r:-4deg">
+    <h1>Favour Israel Taiwo</h1>
+    <p>Software engineer, Lagos. I build the web app, the mobile app and the backend behind both.</p>
+    <a href="mailto:favour.israel.taiwo@outlook.com">Email Favour</a>
+  </div>
+
+  <div class="rig" id="rig" aria-live="polite">
+    <div class="laptop">
+      <div class="lid"><div class="screen"><div class="view" id="web"><div class="bar"><i></i><i></i><i></i></div><div><small id="w-meta"></small><h2 id="w-title"></h2><p id="w-desc"></p></div></div></div></div>
+      <div class="base"></div>
+    </div>
+    <div class="phone"><div class="screen"><div class="view" id="mob"><small id="m-meta"></small><h2 id="m-title"></h2></div></div></div>
+  </div>
+
+  <div class="tray" id="tray"></div>
+  <div class="loose">
+    <button class="thing chip" style="--x:8vw;--y:78vh;--r:3deg" data-say="Next.js, React Native, Node.js, Go, PostgreSQL">What's the stack?</button>
+    <button class="thing chip" style="--x:24vw;--y:86vh;--r:-2deg" data-say="Yes. Open to roles and contracts.">Is he free for work?</button>
+    <button class="thing key" style="--x:84vw;--y:74vh;--r:6deg" id="shuffle" aria-label="Shuffle the desk">Mess</button>
+  </div>
+  <p class="hint" id="hint">Drag anything. Tap a note to open that product on both screens.</p>
+</main>
+
+<script>
+// prototype only: placeholder gradients stand in for real screenshots
+var projects = [
+  {t:"Vibes Meet", d:"Meet people, host events, earn from what you run.", y:"2025", h:150, x:70, yy:10, r:5},
+  {t:"Pulse", d:"Create, send and analyse surveys as a service.", y:"2025", h:205, x:86, yy:28, r:-6},
+  {t:"BroadcastHub", d:"WhatsApp broadcast campaigns and a call center.", y:"2025", h:48, x:3, yy:40, r:4},
+  {t:"AISHA", d:"Analytics for an AI assistant's conversations.", y:"2025", h:330, x:3, yy:62, r:-5},
+  {t:"Umley", d:"Rent, bills and maintenance requests for tenants.", y:"2024", h:265, x:87, yy:52, r:3},
+  {t:"GeduClinic", d:"Hospital management, built for speed and security.", y:"2024", h:15, x:56, yy:76, r:-3}
+];
+var $ = function (id) { return document.getElementById(id); };
+var tray = $("tray"), rig = $("rig"), top = 10, reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+projects.forEach(function (p, i) {
+  var b = document.createElement("button");
+  b.className = "thing note"; b.dataset.i = i;
+  b.style.cssText = "--h:" + p.h + ";--x:" + p.x + "vw;--y:" + p.yy + "vh;--r:" + p.r + "deg";
+  b.innerHTML = "<b>" + p.t + "</b><span>" + p.d + "</span>";
+  tray.appendChild(b);
+});
+
+function show(i) {
+  var p = projects[i], views = [$("web"), $("mob")];
+  document.querySelectorAll(".note").forEach(function (n) { n.classList.toggle("on", n.dataset.i == i); });
+  var paint = function () {
+    rig.style.setProperty("--hue", p.h);
+    $("w-title").textContent = $("m-title").textContent = p.t;
+    $("w-desc").textContent = p.d;
+    $("w-meta").textContent = "web app, " + p.y; $("m-meta").textContent = "mobile, " + p.y;
+    views.forEach(function (v) { v.classList.remove("out"); });
+  };
+  if (reduce) return paint();
+  views.forEach(function (v) { v.classList.add("out"); });
+  setTimeout(paint, 320);
+}
+show(0);
+
+// drag with pointer capture; a tap (no real movement) counts as a click
+var drag = null;
+document.addEventListener("pointerdown", function (e) {
+  var el = e.target.closest(".thing");
+  if (!el || matchMedia("(max-width:760px)").matches) return;
+  if (e.target.closest("a")) return;
+  var r = el.getBoundingClientRect();
+  drag = {el: el, dx: e.clientX - r.left, dy: e.clientY - r.top, sx: e.clientX, sy: e.clientY, moved: false, lx: e.clientX};
+  el.setPointerCapture(e.pointerId); el.style.zIndex = ++top;
+});
+document.addEventListener("pointermove", function (e) {
+  if (drag) {
+    if (Math.abs(e.clientX - drag.sx) + Math.abs(e.clientY - drag.sy) > 6) { drag.moved = true; drag.el.classList.add("drag"); }
+    if (drag.moved) {
+      var tilt = Math.max(-14, Math.min(14, (e.clientX - drag.lx) * 1.2)); drag.lx = e.clientX;
+      drag.el.style.setProperty("--x", (e.clientX - drag.dx) + "px");
+      drag.el.style.setProperty("--y", (e.clientY - drag.dy) + "px");
+      drag.el.style.setProperty("--r", tilt + "deg");
+    }
+  } else if (!reduce) {
+    rig.style.setProperty("--tx", ((e.clientX / innerWidth) - .5) * 14);
+    rig.style.setProperty("--ty", (.5 - (e.clientY / innerHeight)) * 8);
+  }
+});
+document.addEventListener("pointerup", function () {
+  if (!drag) return;
+  var d = drag; drag = null; d.el.classList.remove("drag");
+  if (d.moved) { d.el.dataset.justDragged = "1"; setTimeout(function () { delete d.el.dataset.justDragged; }, 0); $("hint").hidden = true; }
+});
+document.addEventListener("click", function (e) {
+  var el = e.target.closest(".thing"); if (!el || el.dataset.justDragged) return;
+  if (el.classList.contains("note")) show(+el.dataset.i);
+  if (el.dataset.say) { var q = el.textContent; el.textContent = el.dataset.say; el.dataset.say = q; }
+  if (el.id === "shuffle") document.querySelectorAll(".thing").forEach(function (t) {
+    if (t.id === "shuffle") return;
+    t.style.transition = "transform .7s cubic-bezier(.23,1,.32,1)";
+    t.style.setProperty("--x", (4 + Math.random() * 78) + "vw"); t.style.setProperty("--y", (6 + Math.random() * 72) + "vh");
+    t.style.setProperty("--r", (Math.random() * 24 - 12) + "deg");
+    setTimeout(function () { t.style.transition = ""; }, 720);
+  });
+});
+</script>
+</body>
+</html>

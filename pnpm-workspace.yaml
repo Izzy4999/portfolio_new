@@ -2,8 +2,11 @@ packages:
   - .
 
 allowBuilds:
+  '@prisma/client': true
+  '@prisma/engines': true
   contentlayer2: true
   esbuild: true
+  prisma: true
   protobufjs: true
   rome: true
   sharp: true

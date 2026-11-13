@@ -1,0 +1,48 @@
+---
+title: Lectern - Live Captions and Scripture for Church Media Booths
+description: A desktop app for church media booths that captions the sermon live and puts every Bible verse the preacher names on screen by itself, with a cloud API and a web dashboard behind it. I built all three.
+date: "2026-11-13"
+published: true
+url: https://lectern.fun
+---
+
+**Lectern** runs on the booth computer during a service. It listens to the sermon through the sound system, captions it word by word a moment after it is said, and when the preacher says "John chapter three, verse sixteen", the verse goes up on the projector and the livestream without anyone typing it.
+
+## My Role
+
+I built the whole product: the Mac and Windows desktop app, the cloud API that handles accounts, devices and billing, and the website and dashboard where church admins manage their plan, computers and team.
+
+## Captions That Keep Going Offline
+
+Captions run in two modes. Offline captions use a Whisper model on the booth computer itself, so they keep working when the church internet drops and use no data. Cloud captions stream to Deepgram for higher accuracy, metered in hours per plan.
+
+## Scripture on Its Own
+
+Lectern listens for spoken references and matches them against a bundled Bible, so the right verse is on screen while the preacher is still reading it.
+
+## One Window for the Whole Booth
+
+Captions, verses, announcements, song lyrics and sermon slides live in one place. The same window switches cameras, adds lower thirds, streams to YouTube, and records a backup of every service locally in case the stream fails. Output goes to the projector, or into video software over NDI and Spout.
+
+## Run It From a Phone
+
+An operator can drive Lectern from a phone on the church Wi-Fi, or through a pairing code at lectern.fun/remote.
+
+## Plans for Churches and Ministries
+
+The dashboard handles a 14-day trial, plans priced in naira (card, bank transfer or USSD) or renewed automatically in dollars, and a Ministry plan that covers every branch's booth computer with shared cloud hours and per-branch admins.
+
+## Key Features
+
+- **Live Sermon Captions**: on-device Whisper or cloud Deepgram, word by word
+- **Automatic Verse Detection**: spoken references go straight to the screen
+- **Projector, NDI and Spout Output**: into the room or into video software
+- **Livestream and Cameras**: lower thirds, camera switching and YouTube streaming
+- **Phone Remote**: control the booth from a phone on the church Wi-Fi
+- **Multi-Branch Billing**: naira checkout, auto-renewal and per-branch roles
+
+## Stack
+
+Tauri (Rust) with React and TypeScript for the desktop app; Node.js, Prisma, Postgres and Redis for the API; Next.js for the website and dashboard.
+
+[Lectern](https://lectern.fun)

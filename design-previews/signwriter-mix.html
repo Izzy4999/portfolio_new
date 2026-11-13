@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Signwriter mix</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bowlby+One&family=Yellowtail&family=Familjen+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* mock only: four palettes to choose from */
+[data-theme="chalk"]{--ground:#eceee8;--panel:#fff;--text:#12261d;--letter:#12261d;--accent:#087a4d;--paper:#fff;--ink:#12261d;--on-accent:#fff;--chip-bg:#12261d;--chip-fg:#fff}
+[data-theme="sage"]{--ground:#dde6da;--panel:#f3f6f0;--text:#10261c;--letter:#10261c;--accent:#c4340f;--paper:#f7f9f4;--ink:#10261c;--on-accent:#fff;--chip-bg:#10261c;--chip-fg:#f7f9f4}
+[data-theme="blush"]{--ground:#f2e2dc;--panel:#fbf3ef;--text:#3d0c17;--letter:#4a0f1b;--accent:#b81f3a;--paper:#fdf7f4;--ink:#3d0c17;--on-accent:#fff;--chip-bg:#4a0f1b;--chip-fg:#fdf7f4}
+[data-theme="sky"]{--ground:#dfe6ee;--panel:#f4f7fa;--text:#111c2e;--letter:#111c2e;--accent:#1f4fd6;--paper:#f8fafc;--ink:#111c2e;--on-accent:#fff;--chip-bg:#111c2e;--chip-fg:#f8fafc}
+[data-theme="night"]{--ground:#131517;--panel:#1c1f23;--text:#f1efe9;--letter:#f1efe9;--accent:#37d39a;--paper:#f1efe9;--ink:#050607;--on-accent:#05130d;--chip-bg:#f1efe9;--chip-fg:#131517}
+:root{--ease:cubic-bezier(.23,1,.32,1)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--ground);color:var(--text);font-family:"Familjen Grotesk",sans-serif;font-size:18px;line-height:1.5;padding:18px 18px 96px;transition:background .3s}
+::selection{background:var(--accent);color:var(--on-accent)}
+a{color:inherit;text-decoration:none;cursor:pointer}
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:4px solid var(--accent);outline-offset:4px}
+.letter{font-family:"Bowlby One",sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:.01em}
+.board{border:4px solid var(--letter);box-shadow:0 0 0 5px var(--ground),0 0 0 8px var(--accent);max-width:1400px;margin:8px auto;padding:22px clamp(18px,3.4vw,48px) 40px;min-height:calc(100dvh - 130px)}
+
+nav{display:flex;justify-content:space-between;align-items:center;gap:16px;font-weight:700;letter-spacing:.05em;font-size:16px}
+nav ul{display:flex;gap:6px;list-style:none}
+nav li a{display:block;padding:8px 14px;transition:background .18s var(--ease),color .18s var(--ease)}
+nav li a:hover,nav li a[aria-current="page"]{background:var(--accent);color:var(--on-accent);box-shadow:3px 3px 0 var(--ink)}
+
+[data-page]{display:none}
+body[data-show="home"] [data-page="home"],body[data-show="work"] [data-page="work"],body[data-show="project"] [data-page="project"],body[data-show="enquiries"] [data-page="enquiries"]{display:block;animation:in .45s var(--ease)}
+@keyframes in{from{opacity:0;clip-path:inset(0 0 12% 0)}to{opacity:1;clip-path:inset(0)}}
+
+h1{font-size:clamp(52px,10vw,146px);line-height:.92;color:var(--letter);text-shadow:.04em .04em 0 var(--accent);margin-top:clamp(18px,3vw,36px)}
+h1 em{font-family:"Yellowtail",cursive;font-style:normal;text-transform:none;color:var(--accent);font-size:.74em;text-shadow:none;padding:0 .12em;display:inline-block;transform:rotate(-4deg)}
+h2{font-size:clamp(34px,5.4vw,76px);line-height:.95;color:var(--letter);text-shadow:.04em .04em 0 var(--accent)}
+.services{display:flex;flex-wrap:wrap;gap:6px;margin-top:22px;font-size:clamp(15px,1.9vw,25px)}
+.services span{padding:8px clamp(10px,1.6vw,22px);background:var(--chip-bg);color:var(--chip-fg)}
+.lede{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end;margin-top:24px}
+.lede p,.intro{max-width:56ch;font-size:clamp(17px,1.5vw,21px)}
+.plaque{display:inline-block;background:var(--accent);color:var(--on-accent);border:4px solid var(--letter);padding:12px 26px;font-size:clamp(18px,2vw,26px);box-shadow:6px 6px 0 var(--ink);transition:transform .16s var(--ease),box-shadow .16s var(--ease)}
+.plaque:hover{transform:translate(2px,2px);box-shadow:4px 4px 0 var(--ink)}
+.plaque:active{transform:translate(6px,6px);box-shadow:none}
+.more{display:inline-block;margin-top:34px;font-weight:700;border-bottom:3px solid var(--accent);padding-bottom:2px}
+
+/* featured boards: web + mobile pair, overlapping, rise on hover */
+.stack{display:grid;grid-template-columns:repeat(12,1fr);margin-top:clamp(40px,6vw,72px)}
+.job{grid-column:span 7;position:relative;background:var(--panel);border:4px solid var(--letter);padding:18px 18px 64px;transition:transform .35s var(--ease),box-shadow .35s var(--ease);box-shadow:8px 8px 0 var(--ink);transform:rotate(-1.2deg)}
+.job:nth-child(even){grid-column:6 / span 7;margin-top:-70px;transform:rotate(1.4deg)}
+.job:hover,.job:focus-visible{transform:rotate(0) translateY(-10px) scale(1.015);z-index:5;box-shadow:14px 14px 0 var(--ink)}
+.pair{display:flex;align-items:flex-end}
+.web{flex:1;aspect-ratio:16/10;border:4px solid var(--ink);background:var(--paper);overflow:hidden}
+.web::before{content:"";display:block;height:20px;background:var(--ink)}
+.phone{width:24%;aspect-ratio:9/19;margin-left:-9%;margin-bottom:-14px;border:5px solid var(--ink);border-radius:20px;background:var(--paper);overflow:hidden;box-shadow:-6px 6px 0 var(--accent)}
+.slot{display:grid;place-items:center;height:calc(100% - 20px);padding:8px;text-align:center;color:#3a4050;font-size:14px;font-weight:500;line-height:1.25;background:repeating-linear-gradient(135deg,#f7f6f0 0 14px,#e9eae3 14px 28px)}
+.phone .slot{height:100%;font-size:12px;padding:12px;overflow-wrap:anywhere}
+.name{position:absolute;left:-4px;bottom:-4px;background:var(--chip-bg);color:var(--chip-fg);font-size:clamp(18px,2.2vw,30px);padding:8px 16px}
+.what{position:absolute;right:16px;bottom:14px;font-size:15px;font-weight:500;max-width:46%;text-align:right;line-height:1.3}
+.live{background:var(--accent);color:var(--on-accent);border:3px solid var(--letter);font-size:15px;padding:8px 14px;line-height:1;transform:rotate(5deg);box-shadow:3px 3px 0 var(--ink);display:inline-block}
+.job .live{position:absolute;top:-18px;right:22px}
+
+/* work index: the painted price list */
+.list{list-style:none;margin-top:34px;border-top:4px solid var(--letter)}
+.list a{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.6fr) 90px 70px;gap:18px;align-items:center;padding:16px 10px;border-bottom:2px solid color-mix(in srgb,var(--letter) 35%,transparent);transition:background .18s var(--ease),color .18s var(--ease),padding .25s var(--ease)}
+.list a:hover{background:var(--accent);color:var(--on-accent);padding-left:22px}
+.list b{font-family:"Bowlby One";font-weight:400;text-transform:uppercase;font-size:clamp(18px,2.2vw,30px);line-height:1.05}
+.list span{font-size:16px}
+.list time{font-variant-numeric:tabular-nums;font-weight:700;text-align:right}
+
+/* project page */
+.case{display:grid;grid-template-columns:1.5fr 1fr;gap:clamp(24px,4vw,60px);margin-top:36px;align-items:start}
+.case .pair{background:var(--panel);border:4px solid var(--letter);padding:22px 22px 36px;box-shadow:8px 8px 0 var(--ink)}
+.facts{display:grid;grid-template-columns:auto 1fr;gap:10px 22px;margin:22px 0}
+.facts dt{font-weight:700;color:var(--accent)}
+.back{font-weight:700;display:inline-block;margin:26px 0 10px;border-bottom:3px solid var(--accent)}
+
+/* enquiries */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:clamp(22px,4vw,56px);margin-top:36px;align-items:start}
+.window{background:var(--paper);color:var(--ink);border:4px solid var(--accent);padding:20px;box-shadow:8px 8px 0 var(--ink)}
+.window h3{font-family:"Bowlby One";font-weight:400;text-transform:uppercase;font-size:24px;margin-bottom:14px}
+.q,.a{padding:10px 14px;margin-bottom:10px;max-width:88%;font-size:16px}
+.q{background:var(--chip-bg);color:var(--chip-fg);margin-left:auto}
+.a{border:3px solid var(--ink)}
+.row{display:flex;margin-top:6px}
+label{display:block;font-weight:700;font-size:15px;margin:12px 0 6px}
+input,textarea{width:100%;font:inherit;padding:12px 14px;border:3px solid var(--ink);background:#fff;color:#111;caret-color:var(--accent);min-width:0}
+input::placeholder{color:#4b5160}
+.row input{border-right:0}
+button{font:inherit;font-family:"Bowlby One";text-transform:uppercase;background:var(--accent);color:var(--on-accent);border:3px solid var(--ink);padding:12px 18px;cursor:pointer;transition:transform .16s var(--ease)}
+button:active{transform:scale(.97)}
+
+/* enquiries on phones: one panel at a time, no boxed-in frames */
+.tabs{display:none}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.chips button{font-family:"Familjen Grotesk",sans-serif;text-transform:none;font-weight:500;font-size:15px;background:transparent;color:var(--ink);border:2px solid var(--ink);padding:8px 12px;text-align:left}
+.direct{margin-top:18px;font-weight:700}.direct a{border-bottom:3px solid var(--accent)}
+@media (max-width:820px){
+  .tabs{display:grid;grid-template-columns:1fr 1fr;margin-top:24px;border:3px solid var(--letter)}
+  .tabs button{background:transparent;color:var(--letter);border:0;padding:14px 8px;font-size:15px;min-height:48px}
+  .tabs button[aria-selected="true"]{background:var(--accent);color:var(--on-accent)}
+  .two{margin-top:0;gap:0;grid-template-columns:minmax(0,1fr)}
+  .two .window{display:none;border-width:0 3px 3px;border-color:var(--letter);box-shadow:none;padding:18px 14px 22px}
+  .two[data-tab="ask"] .window:first-child,.two[data-tab="write"] .window:last-child{display:block}
+  .window h3{display:none}
+  .q,.a{max-width:100%}
+  .row{flex-direction:column;gap:10px}.row input{border-right:3px solid var(--ink)}
+  .window button:not(.chips button){width:100%;min-height:52px}
+  input,textarea{font-size:16px;min-height:52px}
+}
+
+.solo{max-width:640px;margin-top:36px}
+.fab{position:fixed;right:22px;bottom:84px;z-index:30;border:4px solid var(--letter);box-shadow:6px 6px 0 var(--ink);width:52px;height:52px;padding:0;display:grid;place-items:center;border-width:3px;box-shadow:4px 4px 0 var(--ink);transition:transform .16s var(--ease),box-shadow .16s var(--ease)}
+.fab:hover{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink)}
+.fab .i-x,.fab[aria-expanded="true"] .i-chat{display:none}.fab[aria-expanded="true"] .i-x{display:block}
+.fab[aria-expanded="true"]{background:var(--chip-bg);color:var(--chip-fg)}
+.chat{position:fixed;right:22px;bottom:148px;z-index:30;width:min(400px,calc(100vw - 32px));max-height:calc(100dvh - 190px);overflow:auto;transform-origin:bottom right;animation:pop .22s var(--ease)}
+.chat[hidden]{display:none}
+@keyframes pop{from{opacity:0;transform:scale(.95) translateY(8px)}to{opacity:1;transform:none}}
+@media (max-width:820px){.fab{right:14px}.chat{right:14px;left:14px;width:auto}.chat h3{display:block}.solo .window{display:block;border:3px solid var(--letter);padding:18px 14px 22px}}
+
+footer{margin-top:clamp(48px,7vw,90px);padding-top:20px;border-top:4px solid var(--letter);display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-between;font-weight:500}
+footer a{text-decoration:underline;text-underline-offset:4px}
+
+/* mock-only palette picker */
+.swatches{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);background:#111;color:#fff;padding:10px 14px;display:flex;gap:10px;align-items:center;font-size:14px;z-index:20;border-radius:999px;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.swatches button{width:34px;height:34px;border-radius:50%;border:3px solid #fff;padding:0;box-shadow:none}
+.swatches button[aria-pressed="true"]{outline:3px solid #fff;outline-offset:3px}
+
+@media (max-width:820px){
+  nav{flex-direction:column;align-items:flex-start}nav li a{padding:8px 10px}
+  .lede,.case,.two{grid-template-columns:1fr}
+  .job,.job:nth-child(even){grid-column:1 / -1;margin-top:34px;transform:none}
+  .job{padding-bottom:70px}
+  .what{display:block;position:static;max-width:none;text-align:left;margin-top:30px}
+  .list a{grid-template-columns:1fr auto}.list span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body data-show="home" data-theme="chalk">
+<div class="board">
+  <nav aria-label="Main navigation">
+    <a data-go="home">FAVOUR ISRAEL TAIWO</a>
+    <ul>
+      <li><a data-go="home">HOME</a></li>
+      <li><a data-go="work">WORK</a></li>
+      <li><a data-go="enquiries">ENQUIRIES</a></li>
+    </ul>
+  </nav>
+
+  <!-- HOME: hero + two featured jobs only -->
+  <main data-page="home">
+    <h1 class="letter">Favour <em>builds</em> apps</h1>
+    <div class="services letter"><span>Web apps</span><span>Mobile apps</span><span>AI &amp; WhatsApp tools</span><span>Lagos</span></div>
+    <div class="lede">
+      <p>Software engineer. I build the web app and the mobile app for the same product, then the backend behind both.</p>
+      <a class="plaque letter" data-go="enquiries">Make enquiry</a>
+    </div>
+    <div class="stack">
+      <a class="job" data-go="project">
+        <span class="live letter">Live</span>
+        <div class="pair"><div class="web"><span class="slot">Vibes Meet web screenshot</span></div><div class="phone"><span class="slot">Vibes Meet mobile screenshot</span></div></div>
+        <span class="name letter">Vibes Meet</span>
+        <span class="what">Events and social app where hosts earn from what they run.</span>
+      </a>
+      <a class="job" data-go="project">
+        <span class="live letter">Live</span>
+        <div class="pair"><div class="web"><span class="slot">Pulse web screenshot</span></div><div class="phone"><span class="slot">Pulse mobile screenshot</span></div></div>
+        <span class="name letter">Pulse</span>
+        <span class="what">Survey as a service: create, send and analyse surveys.</span>
+      </a>
+    </div>
+    <a class="more" data-go="work">See all 14 projects</a>
+  </main>
+
+  <!-- WORK: its own page, the full list -->
+  <main data-page="work">
+    <h2 class="letter" style="margin-top:28px">Work done here</h2>
+    <p class="intro" style="margin-top:14px">Fourteen products across fintech, health, education, surveys and messaging.</p>
+    <ul class="list">
+      <li><a data-go="project"><b>Vibes Meet</b><span>Events and social app that pays its hosts</span><i class="live letter" style="font-style:normal;justify-self:start">Live</i><time>2025</time></a></li>
+      <li><a data-go="project"><b>Pulse</b><span>Survey as a service platform</span><i class="live letter" style="font-style:normal;justify-self:start">Live</i><time>2025</time></a></li>
+      <li><a data-go="project"><b>BroadcastHub</b><span>WhatsApp broadcast and call center platform</span><i></i><time>2025</time></a></li>
+      <li><a data-go="project"><b>AISHA Analytics</b><span>Dashboard for AI assistant and WhatsApp conversations</span><i class="live letter" style="font-style:normal;justify-self:start">Live</i><time>2025</time></a></li>
+      <li><a data-go="project"><b>Umley</b><span>Rent, house bills and maintenance requests for tenants</span><i></i><time>2024</time></a></li>
+      <li><a data-go="project"><b>GeduClinic</b><span>Hospital management system</span><i></i><time>2024</time></a></li>
+      <li><a data-go="project"><b>Resource Sharing</b><span>File sharing with admin approval and departments</span><i></i><time>2024</time></a></li>
+    </ul>
+  </main>
+
+  <!-- PROJECT: one case study page -->
+  <main data-page="project">
+    <a class="back" data-go="work">Back to all work</a>
+    <h2 class="letter">Vibes Meet</h2>
+    <div class="case">
+      <div class="pair"><div class="web"><span class="slot">Vibes Meet web screenshot</span></div><div class="phone"><span class="slot">Vibes Meet mobile screenshot</span></div></div>
+      <div>
+        <p>VibesMeet is a way to meet people, host events and earn from what you run. Favour built the mobile app and the web app.</p>
+        <dl class="facts"><dt>Year</dt><dd>2025</dd><dt>Built</dt><dd>Web app, mobile app</dd><dt>Stack</dt><dd>Next.js, React Native (Expo), Node.js</dd></dl>
+        <a class="plaque letter">Visit live app</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- ENQUIRIES: AI chat + contact form -->
+  <main data-page="enquiries">
+    <h2 class="letter" style="margin-top:28px">Enquiries</h2>
+    <p class="intro" style="margin-top:14px">Tell Favour what you need built. He replies by email.</p>
+    <div class="solo">
+      <div class="window">
+        <h3>Write to Favour</h3>
+        <label for="n">Your name</label><input id="n">
+        <label for="e">Email</label><input id="e" type="email">
+        <label for="m">What do you need built?</label><textarea id="m" rows="3"></textarea>
+        <button style="margin-top:14px">Send enquiry</button>
+        <p class="direct">Or email <a href="mailto:favour.israel.taiwo@outlook.com">favour.israel.taiwo@outlook.com</a></p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <span>Favour Israel Taiwo, software engineer, Lagos</span>
+    <span><a href="https://github.com/Izzy4999">GitHub</a> &nbsp; <a href="https://www.linkedin.com/in/favour-taiwo-8b9b5a200">LinkedIn</a></span>
+  </footer>
+</div>
+
+<button class="fab" aria-expanded="false" aria-controls="chat" aria-label="Ask the assistant">
+  <svg class="i-chat" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+  <svg class="i-x" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+</button>
+<aside class="chat window" id="chat" aria-label="Ask the assistant" hidden>
+  <h3>Ask inside</h3>
+  <div class="chips"><button>What has he built with React Native?</button><button>Is he free for work?</button><button>Which projects are live?</button></div>
+  <div class="q">What has Favour built with React Native?</div>
+  <div class="a">Vibes Meet, Umley and a fintech app with live crypto market charts. Want the write-up for one?</div>
+  <div class="row"><input aria-label="Your question" placeholder="Type your question"><button>Ask</button></div>
+</aside>
+
+<div class="swatches" role="group" aria-label="Mock palette picker">
+  Colour
+  <button data-t="chalk" style="background:#eceee8" aria-label="Chalk and emerald" aria-pressed="true"></button>
+  <button data-t="sage" style="background:#dde6da" aria-label="Sage and tomato" aria-pressed="false"></button>
+  <button data-t="blush" style="background:#f2e2dc" aria-label="Blush and crimson" aria-pressed="false"></button>
+  <button data-t="sky" style="background:#dfe6ee" aria-label="Sky and cobalt" aria-pressed="false"></button>
+  <button data-t="night" style="background:#131517" aria-label="Night and mint" aria-pressed="false"></button>
+</div>
+
+<script>
+// mock-only: fake routing and palette switch
+document.addEventListener("click", function (e) {
+  var go = e.target.closest("[data-go]"), t = e.target.closest("[data-t]");
+  if (go) {
+    document.body.dataset.show = go.dataset.go;
+    document.querySelectorAll("nav li a").forEach(function (a) {
+      a.toggleAttribute("aria-current", false);
+      if (a.dataset.go === go.dataset.go || (go.dataset.go === "project" && a.dataset.go === "work")) a.setAttribute("aria-current", "page");
+    });
+    window.scrollTo(0, 0);
+  }
+  var fab = e.target.closest(".fab");
+  if (fab) { var c = document.getElementById("chat"); c.hidden = !c.hidden; fab.setAttribute("aria-expanded", !c.hidden); fab.setAttribute("aria-label", c.hidden ? "Ask the assistant" : "Close the assistant"); }
+  var tab = e.target.closest(".tabs [data-tab]");
+  if (tab) {
+    document.querySelector(".two").dataset.tab = tab.dataset.tab;
+    document.querySelectorAll(".tabs button").forEach(function (b) { b.setAttribute("aria-selected", b === tab); });
+  }
+  if (t) {
+    document.body.dataset.theme = t.dataset.t;
+    document.querySelectorAll("[data-t]").forEach(function (b) { b.setAttribute("aria-pressed", b === t); });
+  }
+});
+document.querySelector('nav li a[data-go="home"]').setAttribute("aria-current", "page");
+</script>
+</body>
+</html>

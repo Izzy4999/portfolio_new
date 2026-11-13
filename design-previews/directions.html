@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portfolio directions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..900&family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..800;1,6..96,400..800&family=Hanken+Grotesk:wght@400;500;600&family=Anton&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#17181a;color:#e8e8e6;font-family:"Geist",system-ui,sans-serif;padding:32px 16px 80px}
+a{color:inherit;text-decoration:none}
+.intro{max-width:1180px;margin:0 auto 40px}
+.intro h1{font-size:28px;font-weight:600;letter-spacing:-.02em}
+.intro p{color:#9a9b98;margin-top:8px;max-width:62ch;line-height:1.55}
+.opt{max-width:1180px;margin:0 auto 56px}
+.meta{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:baseline;margin-bottom:14px}
+.meta b{font-size:20px;font-weight:600}
+.meta span{color:#9a9b98;font-size:14px}
+.frame{border-radius:14px;overflow:hidden;box-shadow:0 30px 80px -30px rgba(0,0,0,.7);min-height:640px;position:relative}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 28px;margin-top:16px;font-size:14px;color:#b9bab7;line-height:1.5}
+.notes strong{color:#e8e8e6;font-weight:500;display:block}
+.btn{transition:transform .16s cubic-bezier(.23,1,.32,1)}
+.btn:active{transform:scale(.97)}
+
+/* ---------- A: Swiss Index ---------- */
+.a{background:#eef0f1;color:#111417;font-family:"Archivo",sans-serif;padding:28px 40px 40px;display:grid;grid-template-rows:auto 1fr auto;gap:36px}
+.a nav{display:flex;justify-content:space-between;font-size:14px;font-weight:500}
+.a nav div{display:flex;gap:28px}
+.a h2{font-size:clamp(44px,8.2vw,112px);font-stretch:118%;font-weight:800;line-height:.92;letter-spacing:-.045em}
+.a h2 i{font-style:normal;color:#1f3fd6}
+.a .sub{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end;margin-top:24px}
+.a .sub p{max-width:44ch;font-size:17px;line-height:1.5;color:#3d444b}
+.a .btn{background:#1f3fd6;color:#fff;padding:14px 22px;font-weight:600;font-size:15px;display:inline-block}
+.a ol{list-style:none;border-top:2px solid #111417}
+.a li{display:grid;grid-template-columns:64px 1.3fr 2fr 70px;gap:16px;padding:15px 0;border-bottom:1px solid #c4c9cd;font-size:15px;align-items:baseline;transition:background .2s,padding .2s cubic-bezier(.23,1,.32,1)}
+.a li:hover{background:#1f3fd6;color:#fff;padding-left:14px}
+.a li:hover span{color:#dfe5ff}
+.a li b{font-weight:700;font-size:19px;letter-spacing:-.01em}
+.a li span{color:#5b646c;font-variant-numeric:tabular-nums}
+
+/* ---------- B: Night Console ---------- */
+.b{background:#0b100e;color:#e9efe9;font-family:"Geist",sans-serif;padding:22px;display:grid;gap:14px;grid-template-columns:repeat(12,1fr);grid-auto-rows:minmax(92px,auto)}
+.b .t{background:#121915;border:1px solid #1f2a24;border-radius:20px;padding:22px;position:relative;overflow:hidden;transition:border-color .25s,transform .25s cubic-bezier(.23,1,.32,1)}
+.b .t:hover{border-color:#3b5a48;transform:translateY(-2px)}
+.b .mono{font-family:"Geist Mono",monospace;font-size:12px;color:#7d8f84}
+.b .hero{grid-column:span 7;grid-row:span 4;display:flex;flex-direction:column;justify-content:space-between;background:radial-gradient(600px 300px at 0% 0%,#17382a 0%,#121915 70%)}
+.b .hero h2{font-size:clamp(34px,4.6vw,60px);font-weight:500;letter-spacing:-.04em;line-height:1.02}
+.b .hero h2 em{font-style:normal;color:#7dffb0}
+.b .hero p{color:#9fb0a5;max-width:42ch;line-height:1.55;margin-top:14px}
+.b .btn{background:#7dffb0;color:#06130c;border-radius:999px;padding:11px 12px 11px 20px;font-weight:600;font-size:14px;display:inline-flex;gap:12px;align-items:center;width:max-content}
+.b .btn u{text-decoration:none;background:#06130c;color:#7dffb0;width:26px;height:26px;border-radius:50%;display:grid;place-items:center}
+.b .chat{grid-column:span 5;grid-row:span 4;display:flex;flex-direction:column;gap:10px}
+.b .msg{background:#1a241e;border-radius:14px 14px 14px 4px;padding:11px 14px;font-size:14px;max-width:88%;line-height:1.45}
+.b .msg.me{align-self:flex-end;background:#7dffb0;color:#06130c;border-radius:14px 14px 4px 14px}
+.b .ask{margin-top:auto;border:1px solid #2a3a31;border-radius:999px;padding:11px 16px;font-size:14px;color:#93a69a}
+.b .p{grid-column:span 4;grid-row:span 2;display:flex;flex-direction:column;justify-content:flex-end;min-height:190px;background-size:cover;background-position:center}
+.b .p::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,16,14,.2),rgba(11,16,14,.95))}
+.b .p>*{position:relative}
+.b .p b{font-size:19px;font-weight:500;letter-spacing:-.02em}
+.b .stack{grid-column:span 12;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.b .stack i{font-style:normal;font-family:"Geist Mono",monospace;font-size:12px;border:1px solid #26332b;border-radius:999px;padding:6px 12px;color:#a9bbb0}
+
+/* ---------- C: Broadsheet ---------- */
+.c{background:#f4f5f2;color:#15171a;font-family:"Hanken Grotesk",sans-serif;padding:26px 44px 44px}
+.c header{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid #15171a;padding-bottom:12px;font-size:13px}
+.c header b{font-family:"Bodoni Moda",serif;font-size:22px;font-weight:700;font-style:italic}
+.c header div{display:flex;gap:24px}
+.c h2{font-family:"Bodoni Moda",serif;font-weight:500;font-size:clamp(46px,8.6vw,124px);line-height:1.02;letter-spacing:-.03em;margin:34px 0 26px;padding-bottom:6px}
+.c h2 em{color:#c4340f}
+.c .cols{display:grid;grid-template-columns:1.1fr 1.4fr 1fr;gap:34px;border-top:1px solid #c9ccc6;padding-top:22px}
+.c .cols p{font-size:16px;line-height:1.6;color:#3a3e44}
+.c .cols p:first-letter{font-family:"Bodoni Moda",serif;font-size:58px;float:left;line-height:.85;padding:4px 8px 0 0;color:#c4340f}
+.c figure img{width:100%;height:230px;object-fit:cover;display:block;filter:grayscale(1) contrast(1.1);transition:filter .5s}
+.c figure:hover img{filter:none}
+.c figcaption{font-size:13px;margin-top:8px;color:#5a5f66}
+.c figcaption b{font-family:"Bodoni Moda",serif;font-size:21px;font-style:italic;color:#15171a;display:block}
+.c aside a{display:block;padding:12px 0;border-bottom:1px solid #c9ccc6;font-family:"Bodoni Moda",serif;font-size:20px;transition:color .2s,padding .25s cubic-bezier(.23,1,.32,1)}
+.c aside a:hover{color:#c4340f;padding-left:10px}
+.c aside small{display:block;font-family:"Hanken Grotesk",sans-serif;font-size:12px;color:#6a6f76}
+.c .btn{display:inline-block;margin-top:18px;border-bottom:2px solid #c4340f;font-weight:600;padding-bottom:3px}
+
+/* ---------- D: Loud Poster ---------- */
+.d{background:#d9ff3f;color:#0c0d0a;font-family:"Space Mono",monospace;padding:0;display:flex;flex-direction:column}
+.d nav{display:flex;justify-content:space-between;padding:16px 26px;border-bottom:3px solid #0c0d0a;font-weight:700;font-size:14px}
+.d nav div{display:flex;gap:22px}
+.d .top{padding:20px 26px 0;flex:1}
+.d h2{font-family:"Anton",sans-serif;font-weight:400;font-size:clamp(70px,15.5vw,218px);line-height:.86;text-transform:uppercase;letter-spacing:-.01em}
+.d h2 span{-webkit-text-stroke:3px #0c0d0a;color:transparent}
+.d .row{display:grid;grid-template-columns:1.2fr 1fr;gap:26px;align-items:end;margin:18px 0 26px}
+.d .row p{font-size:15px;line-height:1.55;max-width:46ch}
+.d .btn{justify-self:end;background:#0c0d0a;color:#d9ff3f;padding:16px 26px;font-weight:700;font-size:15px;box-shadow:6px 6px 0 #ff4d2e;transition:transform .16s,box-shadow .16s}
+.d .btn:hover{transform:translate(3px,3px);box-shadow:3px 3px 0 #ff4d2e}
+.d .tape{background:#0c0d0a;color:#d9ff3f;white-space:nowrap;overflow:hidden;padding:12px 0;font-family:"Anton",sans-serif;font-size:26px;text-transform:uppercase;letter-spacing:.03em}
+.d .tape div{display:inline-block;animation:tape 22s linear infinite}
+@keyframes tape{to{transform:translateX(-50%)}}
+.d .cards{display:grid;grid-template-columns:repeat(3,1fr)}
+.d .cards a{border-top:3px solid #0c0d0a;border-right:3px solid #0c0d0a;padding:18px 22px 22px;transition:background .15s,color .15s}
+.d .cards a:last-child{border-right:0}
+.d .cards a:hover{background:#0c0d0a;color:#d9ff3f}
+.d .cards b{font-family:"Anton",sans-serif;font-weight:400;font-size:34px;text-transform:uppercase;display:block;line-height:1}
+.d .cards small{font-size:12px;display:block;margin-top:8px;line-height:1.45}
+
+@media (prefers-reduced-motion:reduce){.d .tape div{animation:none}*{transition:none!important}}
+@media (max-width:820px){
+ .a,.c{padding:20px}.a li{grid-template-columns:40px 1fr 54px}.a li em{display:none}.a .sub{grid-template-columns:1fr}
+ .b .hero,.b .chat,.b .p{grid-column:span 12}
+ .c .cols{grid-template-columns:1fr}.c header div{display:none}
+ .d .row,.d .cards{grid-template-columns:1fr}.d .btn{justify-self:start}.d .cards a{border-right:0}
+}
+</style>
+</head>
+<body>
+<div class="intro">
+  <h1>Four directions for the portfolio</h1>
+  <p>Each frame is the first screen of the homepage, built with your real name, bio and projects. Hover things. Photos are placeholders until real project screenshots go in.</p>
+</div>
+
+<!-- A -->
+<section class="opt">
+  <div class="meta"><b>A. Swiss Index</b><span>Light, grid-strict, fast to scan. Recruiter reads it in 10 seconds.</span></div>
+  <div class="frame a">
+    <nav><span>Favour Israel Taiwo</span><div><a href="#">Work</a><a href="#">About</a><a href="#">Contact</a></div></nav>
+    <div>
+      <h2>Software engineer for <i>web</i> and <i>mobile</i>.</h2>
+      <div class="sub">
+        <p>I build fast, reliable products in Lagos: fintech dashboards, survey platforms, hospital records and WhatsApp tooling.</p>
+        <a class="btn" href="#">Get in touch</a>
+      </div>
+    </div>
+    <ol>
+      <li><span>01</span><b>Vibes Meet</b><em style="font-style:normal">Events and social app that pays its hosts</em><span>2025</span></li>
+      <li><span>02</span><b>Pulse</b><em style="font-style:normal">Survey as a service platform</em><span>2025</span></li>
+      <li><span>03</span><b>BroadcastHub</b><em style="font-style:normal">WhatsApp broadcast and call center</em><span>2025</span></li>
+      <li><span>04</span><b>Umley</b><em style="font-style:normal">Rent and house bill payments for tenants</em><span>2024</span></li>
+    </ol>
+  </div>
+  <div class="notes">
+    <div><strong>Type and color</strong>Archivo (wide, heavy) on cool grey. One cobalt accent.</div>
+    <div><strong>Signature motion</strong>Project rows flood cobalt on hover and show a screenshot that follows the cursor.</div>
+    <div><strong>Best if</strong>You want hiring managers to find the work instantly. Lowest build effort.</div>
+  </div>
+</section>
+
+<!-- B -->
+<section class="opt">
+  <div class="meta"><b>B. Night Console</b><span>Dark bento. The AI chat becomes the centerpiece instead of a floating bubble.</span></div>
+  <div class="frame b">
+    <div class="t hero">
+      <span class="mono">favour israel taiwo / software engineer / lagos</span>
+      <div>
+        <h2>I ship web and mobile products that <em>stay fast</em> under real use.</h2>
+        <p>Next.js, React Native, Node and Go. Fintech, health records, survey and messaging platforms.</p>
+      </div>
+      <a class="btn" href="#">See the work <u>&nearr;</u></a>
+    </div>
+    <div class="t chat">
+      <span class="mono">ask the portfolio</span>
+      <div class="msg me">What has Favour built with React Native?</div>
+      <div class="msg">Vibes Meet, Umley and a fintech app with live crypto market charts. Want the case study for one?</div>
+      <div class="msg me">Is he open to work?</div>
+      <div class="msg">Yes. I can send him your details now.</div>
+      <div class="ask">Ask about skills, projects, availability</div>
+    </div>
+    <a class="t p" href="#" style="background-image:url(https://picsum.photos/seed/vibes-meet-night/600/400)"><span class="mono">mobile / 2025</span><b>Vibes Meet</b></a>
+    <a class="t p" href="#" style="background-image:url(https://picsum.photos/seed/aisha-analytics/600/400)"><span class="mono">dashboard / 2025</span><b>AISHA Analytics</b></a>
+    <a class="t p" href="#" style="background-image:url(https://picsum.photos/seed/geduclinic-emr/600/400)"><span class="mono">health / 2024</span><b>GeduClinic</b></a>
+    <div class="stack"><i>Next.js</i><i>React Native (Expo)</i><i>TypeScript</i><i>Node.js</i><i>Go</i><i>PostgreSQL</i><i>Prisma</i></div>
+  </div>
+  <div class="notes">
+    <div><strong>Type and color</strong>Geist + Geist Mono on green-tinted charcoal. One mint accent.</div>
+    <div><strong>Signature motion</strong>Tiles lift on hover, chat answers stream in, tiles expand into case studies (shared layout).</div>
+    <div><strong>Best if</strong>You want to read as a product engineer who also builds AI features. Reuses your Groq chat.</div>
+  </div>
+</section>
+
+<!-- C -->
+<section class="opt">
+  <div class="meta"><b>C. Broadsheet</b><span>Editorial. Projects are written up like magazine features.</span></div>
+  <div class="frame c">
+    <header><b>Favour Israel Taiwo</b><div><a href="#">Work</a><a href="#">About</a><a href="#">Contact</a></div></header>
+    <h2>Software that people <em><i>actually</i></em> finish using.</h2>
+    <div class="cols">
+      <div>
+        <p>Favour is a software engineer in Lagos building web and mobile products: fintech dashboards, survey platforms, hospital records and WhatsApp tooling.</p>
+        <a class="btn" href="#">Get in touch</a>
+      </div>
+      <figure>
+        <img src="https://picsum.photos/seed/vibes-meet-editorial/900/520" alt="Vibes Meet app preview placeholder">
+        <figcaption><b>Vibes Meet</b>An events and social app where hosts earn from what they run.</figcaption>
+      </figure>
+      <aside>
+        <a href="#">Pulse<small>Survey as a service, 2025</small></a>
+        <a href="#">BroadcastHub<small>WhatsApp broadcast and call center, 2025</small></a>
+        <a href="#">GeduClinic<small>Hospital management, 2024</small></a>
+        <a href="#">Umley<small>Rent and bills for tenants, 2024</small></a>
+      </aside>
+    </div>
+  </div>
+  <div class="notes">
+    <div><strong>Type and color</strong>Bodoni Moda headlines, Hanken Grotesk body, cool paper white, one vermilion accent.</div>
+    <div><strong>Signature motion</strong>Images go from black and white to color on hover, headlines reveal line by line on scroll.</div>
+    <div><strong>Best if</strong>You want long case studies to be the star. Needs strong screenshots and writing to work.</div>
+  </div>
+</section>
+
+<!-- D -->
+<section class="opt">
+  <div class="meta"><b>D. Loud Poster</b><span>Neo-brutalist. Impossible to forget, riskier with conservative employers.</span></div>
+  <div class="frame d">
+    <nav><span>FAVOUR.DEV</span><div><a href="#">Work</a><a href="#">About</a><a href="#">Contact</a></div></nav>
+    <div class="top">
+      <h2>Favour <span>builds</span> apps.</h2>
+      <div class="row">
+        <p>Software engineer in Lagos. Web and mobile products for fintech, health, surveys and messaging. Next.js, React Native, Node, Go.</p>
+        <a class="btn" href="#">Get in touch</a>
+      </div>
+    </div>
+    <div class="tape"><div>Next.js / React Native / TypeScript / Node.js / Go / PostgreSQL / Prisma / Next.js / React Native / TypeScript / Node.js / Go / PostgreSQL / Prisma / </div></div>
+    <div class="cards">
+      <a href="#"><b>Vibes Meet</b><small>Events and social app that pays its hosts. 2025</small></a>
+      <a href="#"><b>Pulse</b><small>Survey as a service platform. 2025</small></a>
+      <a href="#"><b>BroadcastHub</b><small>WhatsApp broadcast and call center. 2025</small></a>
+    </div>
+  </div>
+  <div class="notes">
+    <div><strong>Type and color</strong>Anton + Space Mono on acid lime, black ink, red-orange hard shadows.</div>
+    <div><strong>Signature motion</strong>One tech-stack tape, project cards that pin and stack as you scroll, buttons that press into their shadow.</div>
+    <div><strong>Best if</strong>You want startups and agencies to remember you. Most build effort for motion.</div>
+  </div>
+</section>
+</body>
+</html>

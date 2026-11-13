@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Curtain reveal prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --indigo: #2b2f7f;
+  --indigo-deep: #1f2263;
+  --saffron: #f2b31a;
+  --cloud: #f7f6f2;
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+
+  /* Mirrors of the timeline constants in the script below */
+  --name-at: 900ms;
+  --scrim-out-at: 2000ms;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  background: var(--cloud);
+  font-family: "Jost", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* The real site, loaded from the dev server, sits behind the intro. */
+.site {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: var(--cloud);
+}
+
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.intro.done { visibility: hidden; }
+
+/* Stage: the cloud backdrop the name sits on */
+.scrim {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: var(--cloud);
+}
+
+.curtain {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* covers the page until the first WebGL frame is drawn */
+  background: var(--indigo);
+}
+
+.curtain.live { background: none; }
+
+.name {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.18em;
+  margin: 0;
+  color: var(--indigo);
+  font-size: clamp(2.75rem, 14vw, 5rem);
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+@media (min-width: 768px) {
+  .name { flex-direction: row; gap: 0.55em; font-size: clamp(3rem, 5.6vw, 6.5rem); }
+}
+
+.word {
+  display: inline-flex;
+  overflow: hidden;
+  padding-block: 0.08em;
+  /* cancels the trailing letter-space so the name stays optically centred */
+  margin-right: -0.12em;
+}
+
+.ch {
+  display: inline-block;
+  transform: translateY(115%);
+}
+
+/* --k is the letter's distance from the middle of the name: the centre letters
+   rise first, the same way the curtain uncovers them. */
+.play .ch {
+  animation: rise 700ms var(--ease-out) calc(var(--name-at) + var(--k) * 30ms) forwards;
+}
+
+.play .scrim { animation: scrim-out 600ms var(--ease-out) var(--scrim-out-at) forwards; }
+
+@keyframes rise { to { transform: translateY(0); } }
+
+@keyframes scrim-out { to { opacity: 0; } }
+
+@keyframes fade-in { from { opacity: 0; } }
+
+/* Reduced motion: no moving fabric, the name fades in and the stage fades out */
+@media (prefers-reduced-motion: reduce) {
+  :root { --scrim-out-at: 1300ms; }
+  .curtain { display: none; }
+  .ch { transform: none; }
+  .play .ch { animation: none; }
+  .play .name { animation: fade-in 400ms ease both; }
+}
+
+/* Prototype controls, not part of the build */
+.controls {
+  position: fixed;
+  left: 50%;
+  bottom: 20px;
+  z-index: 20;
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  transform: translateX(-50%);
+  border-radius: 2px;
+  background: var(--indigo-deep);
+  box-shadow: 0 0 0 1px rgba(247, 246, 242, 0.25);
+}
+
+.controls button {
+  height: 36px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 2px;
+  background: transparent;
+  color: var(--cloud);
+  font: 400 0.6875rem/1 "Jost", sans-serif;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 150ms ease, transform 160ms var(--ease-out);
+}
+
+.controls button:active { transform: scale(0.97); }
+.controls button[aria-pressed="true"] { background: var(--saffron); color: var(--indigo-deep); }
+.controls button:focus-visible { outline: 2px solid var(--saffron); outline-offset: 2px; }
+
+@media (hover: hover) and (pointer: fine) {
+  .controls button:not([aria-pressed="true"]):hover { background: rgba(247, 246, 242, 0.14); }
+}
+</style>
+</head>
+<body>
+<iframe class="site" src="http://localhost:3001/" title="Site behind the curtain" tabindex="-1"></iframe>
+
+<div class="intro" id="intro">
+  <div class="scrim">
+    <h1 class="name" id="name" aria-label="Favour Israel Taiwo"></h1>
+  </div>
+  <canvas class="curtain" id="curtain" aria-hidden="true"></canvas>
+</div>
+
+<div class="controls">
+  <button type="button" id="replay">Replay</button>
+  <button type="button" data-rate="1" aria-pressed="true">1x</button>
+  <button type="button" data-rate="0.5" aria-pressed="false">0.5x</button>
+  <button type="button" data-rate="0.25" aria-pressed="false">0.25x</button>
+</div>
+
+<script id="curtain-vertex" type="x-shader/x-vertex">#version 300 es
+layout(location = 0) in vec3 aPosition;
+layout(location = 1) in vec3 aNormal;
+layout(location = 2) in vec2 aCloth;
+
+uniform float uAspect;
+
+out vec3 vNormal;
+out vec2 vCloth;
+out float vDepth;
+
+// folds nearer the viewer draw slightly larger, which is what makes the hem wavy
+const float PERSPECTIVE = 0.35;
+
+void main() {
+  float scale = 1.0 + PERSPECTIVE * aPosition.z;
+  gl_Position = vec4(aPosition.x / uAspect * scale, aPosition.y * scale, -aPosition.z, 1.0);
+  vNormal = aNormal;
+  vCloth = aCloth;
+  vDepth = aPosition.z;
+}
+</script>
+
+<script id="curtain-fragment" type="x-shader/x-fragment">#version 300 es
+precision highp float;
+
+in vec3 vNormal;
+in vec2 vCloth;
+in float vDepth;
+
+out vec4 outColor;
+
+const vec3 INDIGO = vec3(0.169, 0.184, 0.498);
+const vec3 SAFFRON = vec3(0.949, 0.702, 0.102);
+const vec3 MADDER = vec3(0.698, 0.227, 0.396);
+const vec3 PLUM = vec3(0.416, 0.239, 0.561);
+const vec3 SHEEN = vec3(0.62, 0.68, 1.0);
+const vec3 LIGHT = vec3(-0.406, 0.0, 0.914);
+const vec3 HALF_VECTOR = vec3(-0.2075, 0.0, 0.978);
+
+// The site's silk colours as one soft wash across the cloth: indigo at the
+// side walls, through plum and madder, to a thin saffron glow at the leading
+// edges, so the warmth sits where the curtain opens.
+vec3 silkColor(vec2 cloth) {
+  float fromSeam = abs(cloth.x - 0.5) * 2.0; // 0 at the seam, 1 at the wall
+  vec3 color = mix(PLUM, INDIGO, smoothstep(0.35, 0.8, fromSeam));
+  color = mix(MADDER, color, smoothstep(0.1, 0.5, fromSeam));
+  return mix(SAFFRON, color, smoothstep(0.0, 0.16, fromSeam));
+}
+
+float hash(vec2 p) {
+  return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
+}
+
+void main() {
+  vec3 normal = normalize(vNormal);
+  if (normal.z < 0.0) normal = -normal; // the cloth is lit from the front on both faces
+
+  float diffuse = clamp(dot(normal, LIGHT), 0.0, 1.0);
+  float specular = pow(clamp(dot(normal, HALF_VECTOR), 0.0, 1.0), 14.0);
+  float occlusion = mix(0.72, 1.0, smoothstep(-0.06, 0.04, vDepth)); // folds set back sit in shade
+
+  vec3 color = silkColor(vCloth) * (0.5 + 0.62 * diffuse) * occlusion;
+  color += SHEEN * specular * 0.12;
+  color *= mix(0.82, 1.0, smoothstep(0.0, 0.18, vCloth.y));
+  color += (hash(gl_FragCoord.xy) - 0.5) * 0.015;
+
+  outColor = vec4(color, 1.0);
+}
+</script>
+
+<script>
+const FULL_NAME = "Favour Israel Taiwo";
+
+// Timeline, in seconds (the CSS custom properties at the top mirror these)
+const OPEN_AT = 0.3;
+const TRAVEL_SECONDS = 2.1;
+const END_AT = 2.65;
+
+// Cloth, in world units where the viewport is 2 tall and y points up
+const COLUMNS = 72;
+const ROWS = 28;
+const PLEAT_COLUMNS = 9; // cloth columns per fold
+const FULLNESS = 1.6; // the fabric is this much wider than the opening, so it hangs in folds
+const TOP_Y = 1.08; // the track sits just above the viewport
+const HEM_Y = -1.05; // hangs just past the bottom edge, and shows when the cloth swings
+const WALL_MARGIN = 0.04; // these three are fractions of half the viewport width
+const CENTRE_OVERLAP = 0.02;
+const EXIT_LEAD = 1.25;
+const STACK_PITCH = 0.2; // how tightly the runners bunch, relative to the cloth between them
+
+const GRAVITY = 18;
+const AIR_DRAG = 1.2;
+const SIM_STEP = 1 / 120;
+const SOLVER_PASSES = 5;
+const SETTLE_STEPS = 40;
+const RIGHT_HALF_PHASE = 2.1; // so the two halves are not mirror images
+
+const MAX_FRAME_SECONDS = 0.05;
+const MAX_PIXEL_RATIO = 2;
+const TAU = Math.PI * 2;
+const VERTICES_PER_HALF = COLUMNS * ROWS;
+
+const intro = document.getElementById("intro");
+const canvas = document.getElementById("curtain");
+const rateButtons = document.querySelectorAll("[data-rate]");
+
+const clamp01 = (value) => Math.min(Math.max(value, 0), 1);
+const lerp = (from, to, amount) => from + (to - from) * amount;
+const easeInOutCubic = (x) => (x < 0.5 ? 4 * x * x * x : 1 - (-2 * x + 2) ** 3 / 2);
+
+// One half of a traveler curtain. The top row rides runners on the track; the
+// lead runner is pulled toward the wall and pushes the others into a stack.
+// Everything below the top row is free cloth. mirror: 1 = left half, -1 = right.
+const createHalf = (mirror, phase, halfWidth) => {
+  const span = halfWidth * (1 + WALL_MARGIN + CENTRE_OVERLAP);
+  const closedPitch = span / (COLUMNS - 1);
+  const rest = closedPitch * FULLNESS;
+  const stackPitch = rest * STACK_PITCH;
+  const drop = (TOP_Y - HEM_Y) / (ROWS - 1);
+  const diagonal = Math.hypot(rest, drop);
+  const closedLead = halfWidth * CENTRE_OVERLAP;
+  const exitLead = -halfWidth * EXIT_LEAD;
+  const wallX = closedLead - span;
+
+  const position = new Float32Array(VERTICES_PER_HALF * 3);
+  const previous = new Float32Array(VERTICES_PER_HALF * 3);
+  const runnerX = new Float32Array(COLUMNS);
+
+  const pinTop = (leadX) => {
+    for (let i = 0; i < COLUMNS; i += 1) {
+      runnerX[i] = Math.min(wallX + i * closedPitch, leadX - (COLUMNS - 1 - i) * stackPitch);
+    }
+    for (let i = 0; i < COLUMNS; i += 1) {
+      const pitch = i < COLUMNS - 1 ? runnerX[i + 1] - runnerX[i] : runnerX[i] - runnerX[i - 1];
+      // the closer the runners, the deeper the fold has to be to hold the same cloth
+      const depth = (PLEAT_COLUMNS / TAU) * Math.sqrt(2 * Math.max(rest * rest - pitch * pitch, 0));
+      const at = i * 3;
+      position[at] = mirror * runnerX[i];
+      position[at + 1] = TOP_Y;
+      position[at + 2] = depth * Math.sin((TAU * i) / PLEAT_COLUMNS + phase);
+    }
+  };
+
+  pinTop(closedLead);
+  for (let j = 1; j < ROWS; j += 1) {
+    for (let i = 0; i < COLUMNS; i += 1) {
+      const at = (j * COLUMNS + i) * 3;
+      position[at] = position[i * 3];
+      position[at + 1] = TOP_Y - j * drop;
+      position[at + 2] = position[i * 3 + 2];
+    }
+  }
+  previous.set(position);
+
+  // Links run top row first, so one solver pass carries a correction all the way down
+  const pairs = [];
+  const lengths = [];
+  const link = (a, b, length) => {
+    pairs.push(a, b);
+    lengths.push(length);
+  };
+  for (let j = 0; j < ROWS; j += 1) {
+    for (let i = 0; i < COLUMNS; i += 1) {
+      const index = j * COLUMNS + i;
+      if (j > 0 && i < COLUMNS - 1) link(index, index + 1, rest);
+      if (j < ROWS - 1) link(index, index + COLUMNS, drop);
+      if (j < ROWS - 1 && i < COLUMNS - 1) {
+        link(index, index + COLUMNS + 1, diagonal);
+        link(index + 1, index + COLUMNS, diagonal);
+      }
+    }
+  }
+  const linkPairs = Uint16Array.from(pairs);
+  const linkLengths = Float32Array.from(lengths);
+  const pinnedEnd = COLUMNS * 3;
+  const keep = 1 - AIR_DRAG * SIM_STEP;
+  const fall = GRAVITY * SIM_STEP * SIM_STEP;
+
+  const step = (seconds) => {
+    pinTop(lerp(closedLead, exitLead, easeInOutCubic(clamp01((seconds - OPEN_AT) / TRAVEL_SECONDS))));
+
+    for (let at = pinnedEnd; at < position.length; at += 3) {
+      const moveX = (position[at] - previous[at]) * keep;
+      const moveY = (position[at + 1] - previous[at + 1]) * keep - fall;
+      const moveZ = (position[at + 2] - previous[at + 2]) * keep;
+      previous[at] = position[at];
+      previous[at + 1] = position[at + 1];
+      previous[at + 2] = position[at + 2];
+      position[at] += moveX;
+      position[at + 1] += moveY;
+      position[at + 2] += moveZ;
+    }
+
+    for (let pass = 0; pass < SOLVER_PASSES; pass += 1) {
+      for (let k = 0; k < linkLengths.length; k += 1) {
+        const a = linkPairs[k * 2] * 3;
+        const b = linkPairs[k * 2 + 1] * 3;
+        const dx = position[b] - position[a];
+        const dy = position[b + 1] - position[a + 1];
+        const dz = position[b + 2] - position[a + 2];
+        const distance = Math.sqrt(dx * dx + dy * dy + dz * dz) || linkLengths[k];
+        const stretch = (distance - linkLengths[k]) / distance;
+        if (a < pinnedEnd) {
+          position[b] -= dx * stretch;
+          position[b + 1] -= dy * stretch;
+          position[b + 2] -= dz * stretch;
+        } else {
+          const share = stretch * 0.5;
+          position[a] += dx * share;
+          position[a + 1] += dy * share;
+          position[a + 2] += dz * share;
+          position[b] -= dx * share;
+          position[b + 1] -= dy * share;
+          position[b + 2] -= dz * share;
+        }
+      }
+    }
+  };
+
+  for (let settle = 0; settle < SETTLE_STEPS; settle += 1) step(0);
+
+  return { position, step };
+};
+
+const writeNormals = (position, normal, offset) => {
+  for (let j = 0; j < ROWS; j += 1) {
+    const up = Math.max(j - 1, 0) * COLUMNS;
+    const down = Math.min(j + 1, ROWS - 1) * COLUMNS;
+    for (let i = 0; i < COLUMNS; i += 1) {
+      const left = (j * COLUMNS + Math.max(i - 1, 0)) * 3;
+      const right = (j * COLUMNS + Math.min(i + 1, COLUMNS - 1)) * 3;
+      const above = (up + i) * 3;
+      const below = (down + i) * 3;
+      const acrossX = position[right] - position[left];
+      const acrossY = position[right + 1] - position[left + 1];
+      const acrossZ = position[right + 2] - position[left + 2];
+      const alongX = position[below] - position[above];
+      const alongY = position[below + 1] - position[above + 1];
+      const alongZ = position[below + 2] - position[above + 2];
+      const at = offset + (j * COLUMNS + i) * 3;
+      normal[at] = alongY * acrossZ - alongZ * acrossY;
+      normal[at + 1] = alongZ * acrossX - alongX * acrossZ;
+      normal[at + 2] = alongX * acrossY - alongY * acrossX;
+    }
+  }
+};
+
+const createCurtain = () => {
+  const gl = canvas.getContext("webgl2", { premultipliedAlpha: true, antialias: true, depth: true });
+  if (!gl) return null;
+
+  const compile = (type, elementId) => {
+    const shader = gl.createShader(type);
+    gl.shaderSource(shader, document.getElementById(elementId).textContent);
+    gl.compileShader(shader);
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(shader));
+    return shader;
+  };
+
+  const program = gl.createProgram();
+  gl.attachShader(program, compile(gl.VERTEX_SHADER, "curtain-vertex"));
+  gl.attachShader(program, compile(gl.FRAGMENT_SHADER, "curtain-fragment"));
+  gl.linkProgram(program);
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(program));
+  gl.useProgram(program);
+  gl.enable(gl.DEPTH_TEST);
+  const aspectLocation = gl.getUniformLocation(program, "uAspect");
+
+  const positions = new Float32Array(VERTICES_PER_HALF * 2 * 3);
+  const normals = new Float32Array(VERTICES_PER_HALF * 2 * 3);
+  const clothCoords = new Float32Array(VERTICES_PER_HALF * 2 * 2);
+  const indices = [];
+  for (let half = 0; half < 2; half += 1) {
+    const base = half * VERTICES_PER_HALF;
+    for (let j = 0; j < ROWS; j += 1) {
+      for (let i = 0; i < COLUMNS; i += 1) {
+        const index = base + j * COLUMNS + i;
+        const across = (i / (COLUMNS - 1)) * 0.5;
+        clothCoords[index * 2] = half === 0 ? across : 1 - across;
+        clothCoords[index * 2 + 1] = j / (ROWS - 1);
+        if (i < COLUMNS - 1 && j < ROWS - 1) {
+          indices.push(index, index + COLUMNS, index + 1, index + 1, index + COLUMNS, index + COLUMNS + 1);
+        }
+      }
+    }
+  }
+
+  const attribute = (location, size, data, usage) => {
+    const buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, data, usage);
+    gl.enableVertexAttribArray(location);
+    gl.vertexAttribPointer(location, size, gl.FLOAT, false, 0, 0);
+    return buffer;
+  };
+  const positionBuffer = attribute(0, 3, positions, gl.DYNAMIC_DRAW);
+  const normalBuffer = attribute(1, 3, normals, gl.DYNAMIC_DRAW);
+  attribute(2, 2, clothCoords, gl.STATIC_DRAW);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(indices), gl.STATIC_DRAW);
+
+  let halves = [];
+  let simulated = 0;
+  let aspect = 1;
+
+  const draw = () => {
+    halves.forEach((half, index) => {
+      positions.set(half.position, index * VERTICES_PER_HALF * 3);
+      writeNormals(half.position, normals, index * VERTICES_PER_HALF * 3);
+    });
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.uniform1f(aspectLocation, aspect);
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    gl.bufferSubData(gl.ARRAY_BUFFER, 0, positions);
+    gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
+    gl.bufferSubData(gl.ARRAY_BUFFER, 0, normals);
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0);
+    canvas.classList.add("live");
+  };
+
+  return {
+    // hangs a fresh curtain sized to the current viewport
+    reset: () => {
+      const pixelRatio = Math.min(window.devicePixelRatio, MAX_PIXEL_RATIO);
+      canvas.width = Math.round(canvas.clientWidth * pixelRatio);
+      canvas.height = Math.round(canvas.clientHeight * pixelRatio);
+      aspect = canvas.width / canvas.height;
+      halves = [createHalf(1, 0, aspect), createHalf(-1, RIGHT_HALF_PHASE, aspect)];
+      simulated = 0;
+    },
+    advanceTo: (seconds) => {
+      while (simulated < seconds) {
+        halves.forEach((half) => half.step(simulated));
+        simulated += SIM_STEP;
+      }
+      draw();
+    },
+  };
+};
+
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const curtain = prefersReducedMotion ? null : createCurtain();
+if (!curtain) canvas.hidden = true;
+
+const letters = [...FULL_NAME.replaceAll(" ", "")];
+const middleLetter = (letters.length - 1) / 2;
+let letterIndex = 0;
+FULL_NAME.split(" ").forEach((word) => {
+  const wordEl = document.createElement("span");
+  wordEl.className = "word";
+  wordEl.setAttribute("aria-hidden", "true");
+  [...word].forEach((char) => {
+    const charEl = document.createElement("span");
+    charEl.className = "ch";
+    charEl.textContent = char;
+    charEl.style.setProperty("--k", Math.abs(letterIndex - middleLetter));
+    letterIndex += 1;
+    wordEl.append(charEl);
+  });
+  document.getElementById("name").append(wordEl);
+});
+
+let clock = 0;
+let lastFrame = 0;
+let frameId = 0;
+let playbackRate = 1;
+
+const applyRate = () => {
+  document.getAnimations().forEach((animation) => animation.updatePlaybackRate(playbackRate));
+};
+
+const frame = (now) => {
+  clock += Math.min((now - lastFrame) / 1000, MAX_FRAME_SECONDS) * playbackRate;
+  lastFrame = now;
+  if (curtain) curtain.advanceTo(clock);
+  if (clock >= END_AT) {
+    intro.classList.add("done");
+    return;
+  }
+  frameId = requestAnimationFrame(frame);
+};
+
+const play = () => {
+  cancelAnimationFrame(frameId);
+  intro.classList.remove("play", "done");
+  void intro.offsetWidth; // restart the CSS animations
+  intro.classList.add("play");
+  applyRate();
+  if (curtain) curtain.reset();
+  clock = 0;
+  lastFrame = performance.now();
+  frameId = requestAnimationFrame(frame);
+};
+
+document.getElementById("replay").addEventListener("click", play);
+
+rateButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    playbackRate = Number(button.dataset.rate);
+    rateButtons.forEach((other) => other.setAttribute("aria-pressed", String(other === button)));
+    applyRate();
+  });
+});
+
+play();
+</script>
+</body>
+</html>

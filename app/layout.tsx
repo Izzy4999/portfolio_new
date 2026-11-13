@@ -1,30 +1,34 @@
+import type { JSX, ReactNode } from "react";
 import "../global.css";
-import { Inter } from "next/font/google";
-import LocalFont from "next/font/local";
+import { Inter, JetBrains_Mono, Jost } from "next/font/google";
 import { Metadata } from "next";
-import { Analytics } from "./components/analytics";
 import { Analytics as VercelAnalytics } from "@vercel/analytics/next";
+
+import { SITE } from "@/lib/site";
+
+import { Analytics } from "./components/analytics";
+import { CurtainIntro } from "./components/CurtainIntro";
+import { Providers } from "./components/canopy/Providers";
 import { ChatWidget } from "./components/chat-widget";
 
+const SITE_TITLE = "fiittech.com";
+const SITE_DESCRIPTION = `${SITE.name}. ${SITE.tagline}`;
+// PNG fallback for browsers that ignore SVG icons; rendered from public/favicon.svg.
+const FAVICON_PNG = "/favicon.png";
+
 export const metadata: Metadata = {
-	metadataBase: new URL("https://portfolio-new-theta-amber.vercel.app"),
+	metadataBase: new URL(SITE.url),
 	title: {
-		default: "fiittech.com",
-		template: "%s |",
+		default: `${SITE.name} | ${SITE_TITLE}`,
+		template: `%s | ${SITE.name}`,
 	},
-	description: "A web/mobile app developer",
+	description: SITE_DESCRIPTION,
 	openGraph: {
-		title: "fiittech.com",
-		description: "A web/mobile app developer",
-		url: "https://portfolio-new-theta-amber.vercel.app/",
-		siteName: "fiittech.com",
-		images: [
-			{
-				url: "https://portfolio-new-theta-amber.vercel.app/og.png",
-				width: 1920,
-				height: 1080,
-			},
-		],
+		title: SITE_TITLE,
+		description: SITE_DESCRIPTION,
+		url: SITE.url,
+		siteName: SITE_TITLE,
+		images: [{ url: `${SITE.url}/og.png`, width: 1920, height: 1080 }],
 		locale: "en-US",
 		type: "website",
 	},
@@ -44,38 +48,33 @@ export const metadata: Metadata = {
 		card: "summary_large_image",
 	},
 	icons: {
-		shortcut: "/favicon.png",
+		icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+		shortcut: FAVICON_PNG,
+		apple: FAVICON_PNG,
 	},
 };
-const inter = Inter({
-	subsets: ["latin"],
-	variable: "--font-inter",
-});
 
-const calSans = LocalFont({
-	src: "../public/fonts/CalSans-SemiBold.ttf",
-	variable: "--font-calsans",
-});
+const jost = Jost({ subsets: ["latin"], weight: ["300", "400", "500"], variable: "--font-jost" });
+// Inter and JetBrains Mono stay loaded for the /admin area, which still uses them.
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains-mono" });
 
-export default function RootLayout({
-	children,
-}: {
-	children: React.ReactNode;
-}) {
+const RootLayout = ({ children }: { children: ReactNode }): JSX.Element => {
 	return (
-		<html lang="en" className={[inter.variable, calSans.variable].join(" ")}>
+		<html lang="en" className={[jost.variable, inter.variable, jetbrainsMono.variable].join(" ")}>
 			<head>
 				<Analytics />
 			</head>
-			<body
-				className={`bg-black ${
-					process.env.NODE_ENV === "development" ? "debug-screens" : undefined
-				}`}
-			>
-				{children}
-				<ChatWidget />
+			<body className="bg-cloud font-canopy text-indigo antialiased">
+				<CurtainIntro />
+				<Providers>
+					{children}
+					<ChatWidget />
+				</Providers>
 				<VercelAnalytics />
 			</body>
 		</html>
 	);
-}
+};
+
+export default RootLayout;

@@ -2,10 +2,9 @@ import Groq from "groq-sdk";
 import { Resend } from "resend";
 import { NextRequest } from "next/server";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 async function notifyAIFailure(errorType: string, detail: string) {
   try {
+    const resend = new Resend(process.env.RESEND_API_KEY);
     await resend.emails.send({
       from: "Portfolio Monitor <noreply@fiittech.fun>",
       to: "princeisrael409@gmail.com",
@@ -46,8 +45,6 @@ async function notifyAIFailure(errorType: string, detail: string) {
     // Silently fail — don't let notification errors break anything
   }
 }
-
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 const SYSTEM_PROMPT = `You are an AI assistant on Favour Israel Taiwo's portfolio website. Help visitors learn about Favour and his work.
 
@@ -107,6 +104,7 @@ When a visitor expresses interest in hiring, collaborating with, or contacting F
 export async function POST(req: NextRequest): Promise<Response> {
   try {
     const { messages } = await req.json();
+    const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
     const stream = await groq.chat.completions.create({
       model: "llama-3.3-70b-versatile",

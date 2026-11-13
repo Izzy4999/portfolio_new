@@ -1,0 +1,411 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-13T13:04:15Z",
+  "title": "Design System: Favour Israel Taiwo Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "indigo": {
+        "role": "primary",
+        "displayName": "Indigo Ink",
+        "canonical": "#2b2f7f",
+        "tonalRamp": [
+          "oklch(15% 0.072 275)",
+          "oklch(26% 0.111 275)",
+          "oklch(38% 0.130 275)",
+          "oklch(50% 0.130 275)",
+          "oklch(62% 0.117 275)",
+          "oklch(74% 0.091 275)",
+          "oklch(86% 0.052 275)",
+          "oklch(95% 0.023 275)"
+        ]
+      },
+      "indigo-deep": {
+        "role": "primary",
+        "displayName": "Deep Indigo",
+        "canonical": "#1f2263",
+        "tonalRamp": [
+          "oklch(15% 0.066 275)",
+          "oklch(26% 0.102 275)",
+          "oklch(38% 0.120 275)",
+          "oklch(50% 0.120 275)",
+          "oklch(62% 0.108 275)",
+          "oklch(74% 0.084 275)",
+          "oklch(86% 0.048 275)",
+          "oklch(95% 0.022 275)"
+        ]
+      },
+      "madder": {
+        "role": "secondary",
+        "displayName": "Madder Silk",
+        "canonical": "#b23a65",
+        "tonalRamp": [
+          "oklch(15% 0.088 2)",
+          "oklch(26% 0.136 2)",
+          "oklch(38% 0.160 2)",
+          "oklch(50% 0.160 2)",
+          "oklch(62% 0.144 2)",
+          "oklch(74% 0.112 2)",
+          "oklch(86% 0.064 2)",
+          "oklch(95% 0.029 2)"
+        ]
+      },
+      "saffron": {
+        "role": "tertiary",
+        "displayName": "Saffron Silk",
+        "canonical": "#f2b31a",
+        "tonalRamp": [
+          "oklch(15% 0.088 82)",
+          "oklch(26% 0.136 82)",
+          "oklch(38% 0.160 82)",
+          "oklch(50% 0.160 82)",
+          "oklch(62% 0.144 82)",
+          "oklch(74% 0.112 82)",
+          "oklch(86% 0.064 82)",
+          "oklch(95% 0.029 82)"
+        ]
+      },
+      "plum": {
+        "role": "tertiary",
+        "displayName": "Plum Chord",
+        "canonical": "#6a3d8f",
+        "tonalRamp": [
+          "oklch(15% 0.072 305)",
+          "oklch(26% 0.111 305)",
+          "oklch(38% 0.130 305)",
+          "oklch(50% 0.130 305)",
+          "oklch(62% 0.117 305)",
+          "oklch(74% 0.091 305)",
+          "oklch(86% 0.052 305)",
+          "oklch(95% 0.023 305)"
+        ]
+      },
+      "umber": {
+        "role": "tertiary",
+        "displayName": "Umber Chord",
+        "canonical": "#8a4a28",
+        "tonalRamp": [
+          "oklch(15% 0.055 48)",
+          "oklch(26% 0.085 48)",
+          "oklch(38% 0.100 48)",
+          "oklch(50% 0.100 48)",
+          "oklch(62% 0.090 48)",
+          "oklch(74% 0.070 48)",
+          "oklch(86% 0.040 48)",
+          "oklch(95% 0.018 48)"
+        ]
+      },
+      "dusk": {
+        "role": "tertiary",
+        "displayName": "Dusk Chord",
+        "canonical": "#5b4a72",
+        "tonalRamp": [
+          "oklch(15% 0.033 305)",
+          "oklch(26% 0.051 305)",
+          "oklch(38% 0.060 305)",
+          "oklch(50% 0.060 305)",
+          "oklch(62% 0.054 305)",
+          "oklch(74% 0.042 305)",
+          "oklch(86% 0.024 305)",
+          "oklch(95% 0.011 305)"
+        ]
+      },
+      "cloud": {
+        "role": "neutral",
+        "displayName": "Sun-White Ground",
+        "canonical": "#f7f6f2",
+        "tonalRamp": [
+          "oklch(15% 0.007 95)",
+          "oklch(26% 0.010 95)",
+          "oklch(38% 0.012 95)",
+          "oklch(50% 0.012 95)",
+          "oklch(62% 0.011 95)",
+          "oklch(74% 0.008 95)",
+          "oklch(86% 0.005 95)",
+          "oklch(95% 0.002 95)"
+        ]
+      },
+      "sky": {
+        "role": "neutral",
+        "displayName": "Pale Sky",
+        "canonical": "#dde5f4",
+        "tonalRamp": [
+          "oklch(15% 0.017 262)",
+          "oklch(26% 0.025 262)",
+          "oklch(38% 0.030 262)",
+          "oklch(50% 0.030 262)",
+          "oklch(62% 0.027 262)",
+          "oklch(74% 0.021 262)",
+          "oklch(86% 0.012 262)",
+          "oklch(95% 0.005 262)"
+        ]
+      },
+      "white": {
+        "role": "neutral",
+        "displayName": "Paper White",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "oklch(15% 0.002 95)",
+          "oklch(26% 0.003 95)",
+          "oklch(38% 0.004 95)",
+          "oklch(50% 0.004 95)",
+          "oklch(62% 0.004 95)",
+          "oklch(74% 0.003 95)",
+          "oklch(86% 0.002 95)",
+          "oklch(95% 0.001 95)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The name on the home page and page titles. Thin, uppercase, wide."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "The project name on a project page."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Project names on cards and rows."
+      },
+      "body-lead": {
+        "displayName": "Body Lead",
+        "purpose": "Tagline, page intro sentences, email links."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Descriptions and panel text, in indigo at 85%."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Panel headings, form labels, menu items, dates, social links."
+      },
+      "button": {
+        "displayName": "Button",
+        "purpose": "Button text only."
+      }
+    },
+    "shadows": [
+      {
+        "name": "screen-shade",
+        "value": "0 30px 60px -28px rgba(43,47,127,0.55)",
+        "purpose": "Under hero screens and project page screenshots."
+      },
+      {
+        "name": "cover-shade",
+        "value": "0 24px 48px -24px rgba(43,47,127,0.55)",
+        "purpose": "Under the framed screenshot inside a card cover."
+      },
+      {
+        "name": "panel-shade",
+        "value": "18px 18px 60px -34px rgba(43,47,127,0.45)",
+        "purpose": "Under the hero name panel on desktop."
+      },
+      {
+        "name": "float-shade",
+        "value": "0 32px 64px -24px rgba(43,47,127,0.6)",
+        "purpose": "The open chat panel."
+      },
+      {
+        "name": "launcher-shade",
+        "value": "0 18px 40px -16px rgba(43,47,127,0.7)",
+        "purpose": "The chat launcher button."
+      },
+      {
+        "name": "toast-shade",
+        "value": "0 18px 40px -20px rgba(43,47,127,0.5)",
+        "purpose": "Toast messages."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-strong",
+        "value": "cubic-bezier(0.23, 1, 0.32, 1)",
+        "purpose": "The one easing curve for controls, cards and the chat panel."
+      },
+      {
+        "name": "duration-control",
+        "value": "200ms",
+        "purpose": "Button, card, dot and arrow changes."
+      },
+      {
+        "name": "duration-colour",
+        "value": "150ms",
+        "purpose": "Colour-only changes such as field borders and row hover."
+      },
+      {
+        "name": "duration-silk-sweep",
+        "value": "500ms",
+        "purpose": "The silk edge widening on a project card."
+      },
+      {
+        "name": "silk-drift",
+        "value": "14s ease-in-out infinite alternate; translate 18px 10px, skewY 1.2deg",
+        "purpose": "The canopy's own slow drift. Off under reduced motion."
+      },
+      {
+        "name": "silk-lean",
+        "value": "spring stiffness 40, damping 14; up to 28px",
+        "purpose": "The canopy leaning toward the pointer. Off under reduced motion."
+      },
+      {
+        "name": "press",
+        "value": "scale(0.97) buttons, scale(0.98) chat starters, scale(0.99) cards",
+        "purpose": "Press feedback."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Filled indigo button for the main action on a page.",
+      "html": "<button class=\"ds-btn-primary\">See my work</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; height: 48px; padding: 0 32px; border-radius: 2px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.28em; white-space: nowrap; cursor: pointer; font-family: var(--font-jost), Jost, system-ui, sans-serif; transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1), background-color 200ms cubic-bezier(0.23, 1, 0.32, 1), color 200ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-btn-primary { background: #2b2f7f; color: #ffffff; border: none; } .ds-btn-primary:hover { background: #1f2263; } .ds-btn-primary:active { transform: scale(0.97); } .ds-btn-primary:focus-visible { outline: 2px solid #b23a65; outline-offset: 3px; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Outlined button for the second action; fills indigo on hover.",
+      "html": "<button class=\"ds-btn-secondary\">Say hello</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; height: 48px; padding: 0 32px; border-radius: 2px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.28em; white-space: nowrap; cursor: pointer; font-family: var(--font-jost), Jost, system-ui, sans-serif; transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1), background-color 200ms cubic-bezier(0.23, 1, 0.32, 1), color 200ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-btn-secondary { background: #f7f6f2; color: #2b2f7f; border: 1px solid #2b2f7f; } .ds-btn-secondary:hover { background: #2b2f7f; color: #ffffff; } .ds-btn-secondary:active { transform: scale(0.97); } .ds-btn-secondary:focus-visible { outline: 2px solid #b23a65; outline-offset: 3px; }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Form field with a small-caps label above it.",
+      "html": "<label class=\"ds-field-label\" for=\"ds-field-name\">Name</label><input id=\"ds-field-name\" class=\"ds-field\" placeholder=\"Your name\" />",
+      "css": ".ds-field-label { display: block; margin-bottom: 12px; font-size: 0.6875rem; line-height: 1; text-transform: uppercase; letter-spacing: 0.28em; color: #2b2f7f; font-family: var(--font-jost), Jost, system-ui, sans-serif; } .ds-field { width: 100%; height: 48px; padding: 0 16px; background: #ffffff; color: #2b2f7f; border: 1px solid rgba(43,47,127,0.4); border-radius: 2px; font-size: 1rem; caret-color: #b23a65; outline: none; font-family: var(--font-jost), Jost, system-ui, sans-serif; transition: border-color 150ms; } .ds-field::placeholder { color: rgba(43,47,127,0.8); } .ds-field:focus { border-color: #2b2f7f; } .ds-field:focus-visible { outline: 2px solid #b23a65; outline-offset: 3px; }"
+    },
+    {
+      "name": "Project Card",
+      "kind": "card",
+      "refersTo": "project-card",
+      "description": "Flat white card with a silk-coloured edge that sweeps wider on hover.",
+      "html": "<a class=\"ds-card\" href=\"#\"><div class=\"ds-card-body\"><h3 class=\"ds-card-title\">BroadcastHub</h3><p class=\"ds-card-text\">WhatsApp broadcast campaigns and call centre tools in one dashboard.</p><span class=\"ds-card-link\">View project <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></span></div><div class=\"ds-card-silk\"><div class=\"ds-card-silk-fill\"></div></div></a>",
+      "css": ".ds-card { display: flex; overflow: hidden; max-width: 520px; background: #ffffff; border: 1px solid rgba(43,47,127,0.3); border-radius: 2px; color: #2b2f7f; text-decoration: none; font-family: var(--font-jost), Jost, system-ui, sans-serif; transition: border-color 200ms cubic-bezier(0.23, 1, 0.32, 1), transform 200ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-card:hover { border-color: #2b2f7f; } .ds-card:active { transform: scale(0.99); } .ds-card:focus-visible { outline: 2px solid #b23a65; outline-offset: 3px; } .ds-card-body { position: relative; z-index: 1; flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 16px; padding: 24px; } .ds-card-title { margin: 0; font-size: 0.875rem; font-weight: 500; line-height: 1.375; text-transform: uppercase; letter-spacing: 0.2em; } .ds-card-text { margin: 0; font-size: 0.9375rem; line-height: 1.625; color: rgba(43,47,127,0.85); } .ds-card-link { display: flex; align-items: center; gap: 16px; padding-top: 8px; font-size: 0.6875rem; line-height: 1; text-transform: uppercase; letter-spacing: 0.28em; } .ds-card-link svg { transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-card:hover .ds-card-link svg { transform: translateX(6px); } .ds-card-silk { position: relative; width: 14%; flex-shrink: 0; } .ds-card-silk-fill { position: absolute; inset: 0; background: #b23a65; transform-origin: right; transition: transform 500ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-card:hover .ds-card-silk-fill { transform: scaleX(1.6); }"
+    },
+    {
+      "name": "Rail Menu",
+      "kind": "nav",
+      "refersTo": "",
+      "description": "Desktop menu: small-caps items with dots on a vertical line.",
+      "html": "<nav class=\"ds-rail\"><span class=\"ds-rail-line\"></span><a class=\"ds-rail-item\" href=\"#\" aria-current=\"page\"><span class=\"ds-rail-dot\"></span>Home</a><a class=\"ds-rail-item\" href=\"#\"><span class=\"ds-rail-dot\"></span>Work</a><a class=\"ds-rail-item\" href=\"#\"><span class=\"ds-rail-dot\"></span>Contact</a></nav>",
+      "css": ".ds-rail { position: relative; font-family: var(--font-jost), Jost, system-ui, sans-serif; } .ds-rail-line { position: absolute; top: 20px; bottom: 20px; left: 4.5px; width: 1px; background: rgba(43,47,127,0.3); } .ds-rail-item { position: relative; display: flex; align-items: center; gap: 24px; padding: 14px 0; font-size: 0.6875rem; line-height: 1; text-transform: uppercase; letter-spacing: 0.28em; color: #2b2f7f; text-decoration: none; } .ds-rail-dot { position: relative; z-index: 1; width: 10px; height: 10px; border-radius: 9999px; border: 1px solid #2b2f7f; background: #f7f6f2; transition: background-color 200ms cubic-bezier(0.23, 1, 0.32, 1), transform 200ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-rail-item:hover .ds-rail-dot { background: #f2b31a; transform: scale(1.25); } .ds-rail-item[aria-current=page] .ds-rail-dot { background: #2b2f7f; } .ds-rail-item:focus-visible { outline: 2px solid #b23a65; outline-offset: 3px; }"
+    },
+    {
+      "name": "Panel Heading",
+      "kind": "custom",
+      "refersTo": "",
+      "description": "Small-caps heading on a 1px indigo line; opens every ruled panel.",
+      "html": "<h2 class=\"ds-panel-heading\">Featured work</h2>",
+      "css": ".ds-panel-heading { margin: 0 0 24px; padding-bottom: 16px; border-bottom: 1px solid rgba(43,47,127,0.4); font-size: 0.6875rem; font-weight: 400; line-height: 1; text-transform: uppercase; letter-spacing: 0.28em; color: #2b2f7f; font-family: var(--font-jost), Jost, system-ui, sans-serif; }"
+    },
+    {
+      "name": "Chat Starter",
+      "kind": "chip",
+      "refersTo": "chat-starter",
+      "description": "A ready-made question that opens the AI chat.",
+      "html": "<button class=\"ds-chat-starter\">Which projects have both a web and a mobile app?</button>",
+      "css": ".ds-chat-starter { width: 100%; max-width: 320px; padding: 12px 16px; text-align: left; background: #ffffff; color: #2b2f7f; border: 1px solid rgba(43,47,127,0.3); border-radius: 2px; font-size: 0.9375rem; line-height: 1.375; cursor: pointer; font-family: var(--font-jost), Jost, system-ui, sans-serif; transition: border-color 200ms cubic-bezier(0.23, 1, 0.32, 1), transform 200ms cubic-bezier(0.23, 1, 0.32, 1); } .ds-chat-starter:hover { border-color: #2b2f7f; } .ds-chat-starter:active { transform: scale(0.98); } .ds-chat-starter:focus-visible { outline: 2px solid #b23a65; outline-offset: 3px; }"
+    },
+    {
+      "name": "Silk Canopy",
+      "kind": "custom",
+      "refersTo": "",
+      "description": "Three silk bands with painted crossings over the sky gradient; tops every page header.",
+      "html": "<div class=\"ds-silk\"><svg viewBox=\"0 0 1000 400\" preserveAspectRatio=\"none\"><defs><clipPath id=\"ds-silk-i\"><path d=\"M150,-80 L1140,-80 L1140,96 C820,150 450,128 150,-80 Z\"/></clipPath><clipPath id=\"ds-silk-s\"><path d=\"M560,-80 L700,-80 C760,90 900,200 1140,216 L1140,300 C860,300 650,150 560,-80 Z\"/></clipPath></defs><g fill-opacity=\"0.94\"><path d=\"M560,-80 L700,-80 C760,90 900,200 1140,216 L1140,300 C860,300 650,150 560,-80 Z\" fill=\"#f2b31a\"/><path d=\"M150,-80 L1140,-80 L1140,96 C820,150 450,128 150,-80 Z\" fill=\"#2b2f7f\"/><path d=\"M560,-80 L700,-80 C760,90 900,200 1140,216 L1140,300 C860,300 650,150 560,-80 Z\" fill=\"#5b4a72\" clip-path=\"url(#ds-silk-i)\"/><path d=\"M-140,-80 L260,-80 C520,60 800,150 1140,172 L1140,252 C760,250 400,150 -140,-80 Z\" fill=\"#b23a65\"/><path d=\"M-140,-80 L260,-80 C520,60 800,150 1140,172 L1140,252 C760,250 400,150 -140,-80 Z\" fill=\"#8a4a28\" clip-path=\"url(#ds-silk-s)\"/><path d=\"M-140,-80 L260,-80 C520,60 800,150 1140,172 L1140,252 C760,250 400,150 -140,-80 Z\" fill=\"#6a3d8f\" clip-path=\"url(#ds-silk-i)\"/></g></svg></div>",
+      "css": ".ds-silk { height: 220px; overflow: hidden; background: linear-gradient(to bottom, #dde5f4, #f7f6f2); } .ds-silk svg { width: 100%; height: 100%; overflow: visible; transform-origin: 0 0; animation: ds-silk-drift 14s ease-in-out infinite alternate; } @keyframes ds-silk-drift { from { transform: translate3d(0,0,0) skewY(0deg); } to { transform: translate3d(18px,10px,0) skewY(1.2deg); } } @media (prefers-reduced-motion: reduce) { .ds-silk svg { animation: none; } }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Silk Canopy",
+    "overview": "The site is a sunlit courtyard. The ground is a warm off-white. Three silk banners (indigo, madder pink, saffron yellow) hang across the top of each page and drift slowly. Real screens of real products sit in the light underneath them. Everything else is quiet: one typeface, one ink colour, thin lines.\n\nColour does one job. Indigo is the ink for every word, every line and every main control. Madder and saffron are the silk. Where two banners cross, the crossing is painted in an exact third colour, like two dyed cloths laid on top of each other. Away from the canopy, madder and saffron only show up as small signals: a focus ring, a text selection, the edge of a project card.\n\nThe layout is a set of ruled panels, not floating cards. Thin indigo lines divide the page into rooms. Type is light and wide: thin capital letters with lots of space between them. The system is light only. It was chosen in place of the dark developer site with a neon accent and a card grid.",
+    "keyCharacteristics": [
+      "Off-white ground, indigo ink, no grey anywhere.",
+      "Three silk bands at the top of every page header, with painted crossings.",
+      "One typeface (Jost) at weights 300, 400 and 500 only.",
+      "Wide-tracked capitals for names, titles, labels and buttons.",
+      "Panels divided by 1px indigo lines.",
+      "Near-square corners (2px) on every control and card.",
+      "Soft indigo-tinted shadows only under screenshots and floating things."
+    ],
+    "rules": [
+      {
+        "name": "The Indigo Ink Rule",
+        "body": "Every word and every line is indigo. Quieter text is indigo at lower opacity (85% for body, never below 75%). There is no grey and no black in this system.",
+        "section": "colors"
+      },
+      {
+        "name": "The Silk Only Rule",
+        "body": "Madder and saffron fill large areas only as silk: the canopy bands and the coloured edge of a project card. Anywhere else they are small signals a few pixels wide. They are never a button fill, a panel background or a heading colour.",
+        "section": "colors"
+      },
+      {
+        "name": "The Painted Chord Rule",
+        "body": "Where two silk bands cross, paint the crossing in its exact chord colour with a clipped shape. Do not use blend modes. Multiply turns indigo over madder nearly black.",
+        "section": "colors"
+      },
+      {
+        "name": "The Thin Capitals Rule",
+        "body": "Display type is weight 300, uppercase and wide-tracked. Nothing in the system is heavier than 500. Only weights 300, 400 and 500 are loaded, so anything bolder would be faked by the browser.",
+        "section": "typography"
+      },
+      {
+        "name": "The One Label Rule",
+        "body": "There is one small-caps label style (0.6875rem, 0.28em). Use it for every label. Panel headings are this label on top of a 1px indigo line, set as real headings.",
+        "section": "typography"
+      },
+      {
+        "name": "The Ruled Panel Rule",
+        "body": "Sections are separated by a 1px indigo line, never by a gap, a background change or a shadow.",
+        "section": "layout"
+      },
+      {
+        "name": "The Daylight Shade Rule",
+        "body": "Shadows are indigo-tinted and only go under screenshots and floating things. Cards, fields and buttons stay flat; they change border or fill on hover, not height.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do set every word and every line in indigo, and use indigo at 85% for quieter text.",
+      "Do open each page with the silk canopy over the sky-to-ground gradient, and leave clear space under it.",
+      "Do divide sections with 1px indigo lines at 40% opacity.",
+      "Do use the one label style (0.6875rem, uppercase, 0.28em) for every small label.",
+      "Do keep controls 48px tall with 2px corners.",
+      "Do tint shadows indigo and keep them under screenshots and floating things.",
+      "Do give each project card one silk colour, cycling indigo, madder, saffron.",
+      "Do show a web screen and a phone screen together when a product has both.",
+      "Do stop the silk drift and lean when the visitor asks for reduced motion.",
+      "Do use the strong ease-out curve at 200ms for controls and 150ms for colour-only changes."
+    ],
+    "donts": [
+      "Don't use grey, black or pure black shadows. The system has no neutral ink.",
+      "Don't use madder or saffron as a button fill, a panel background or a heading colour.",
+      "Don't set text in saffron.",
+      "Don't use blend modes for silk crossings; paint the chord colour.",
+      "Don't use a font weight above 500, or a second typeface.",
+      "Don't round corners beyond 2px, except the phone frame, the hero name panel and the rail dots.",
+      "Don't put shadows on cards, buttons or fields.",
+      "Don't build a dark theme. The world is daylight, and this was the owner's choice.",
+      "Don't fill empty screenshot slots with made-up images. Say plainly that the screenshot is to come."
+    ]
+  }
+}

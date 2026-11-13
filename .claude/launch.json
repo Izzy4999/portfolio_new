@@ -1,0 +1,7 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    { "name": "portfolio", "runtimeExecutable": "pnpm", "runtimeArgs": ["dev", "--port", "3210"], "port": 3210 },
+    { "name": "design-previews", "runtimeExecutable": "python3", "runtimeArgs": ["-m", "http.server", "3211", "--directory", "design-previews"], "port": 3211 }
+  ]
+}

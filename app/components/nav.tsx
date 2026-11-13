@@ -1,54 +1,33 @@
 "use client";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 
 export const Navigation: React.FC = () => {
-	const ref = useRef<HTMLElement>(null);
-	const [isIntersecting, setIntersecting] = useState(true);
-
-	useEffect(() => {
-		if (!ref.current) return;
-		const observer = new IntersectionObserver(([entry]) =>
-			setIntersecting(entry.isIntersecting),
-		);
-
-		observer.observe(ref.current);
-		return () => observer.disconnect();
-	}, []);
-
 	return (
-		<header ref={ref}>
-			<div
-				className={`fixed inset-x-0 top-0 z-50 backdrop-blur  duration-200 border-b  ${
-					isIntersecting
-						? "bg-zinc-900/0 border-transparent"
-						: "bg-zinc-900/500  border-zinc-800 "
-				}`}
-			>
-				<div className="container flex flex-row-reverse items-center justify-between p-6 mx-auto">
-					<div className="flex justify-between gap-8">
-						<Link
-							href="/projects"
-							className="duration-200 text-zinc-400 hover:text-zinc-100"
-						>
-							Projects
-						</Link>
-						<Link
-							href="/contact"
-							className="duration-200 text-zinc-400 hover:text-zinc-100"
-						>
-							Contact
-						</Link>
-					</div>
-
+		<header className="sticky top-0 z-50 border-b border-ink/15 bg-paper/90 backdrop-blur">
+			<div className="mx-auto flex h-14 max-w-5xl flex-row-reverse items-center justify-between px-6 lg:px-8">
+				<div className="flex justify-between gap-6 font-mono text-xs uppercase tracking-[0.08em]">
 					<Link
-						href="/"
-						className="duration-200 text-zinc-300 hover:text-zinc-100"
+						href="/projects"
+						className="relative text-ink/60 transition-colors duration-150 hover:text-signal"
 					>
-						<ArrowLeft className="w-6 h-6 " />
+						Work
+					</Link>
+					<Link
+						href="/contact"
+						className="relative text-ink/60 transition-colors duration-150 hover:text-signal"
+					>
+						Contact
 					</Link>
 				</div>
+
+				<Link
+					href="/"
+					className="flex h-8 w-8 items-center justify-center border border-ink/25 text-ink/70 transition-colors duration-150 hover:border-signal hover:text-signal"
+				>
+					<ArrowLeft className="h-4 w-4" strokeWidth={2} />
+				</Link>
 			</div>
 		</header>
 	);

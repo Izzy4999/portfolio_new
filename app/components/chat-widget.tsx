@@ -1,6 +1,13 @@
 "use client";
 import { useState, useRef, useEffect, FormEvent, ReactNode } from "react";
-import { X, Send, Sparkles, CheckCircle } from "lucide-react";
+import { X, Send, CheckCircle } from "lucide-react";
+
+import { CHAT_OPEN_EVENT } from "@/lib/site";
+import { useChatPanelAnchor } from "@/app/hooks/use-chat-panel-anchor";
+import type { ChatOpenDetail } from "@/types/contact";
+
+import { ChatLauncher } from "./ChatLauncher";
+import { ChatBotMascot } from "./ChatBotMascot";
 
 function renderContent(text: string): ReactNode[] {
   const regex =
@@ -20,7 +27,7 @@ function renderContent(text: string): ReactNode[] {
         href={href}
         target={email ? "_self" : "_blank"}
         rel="noopener noreferrer"
-        className="underline text-zinc-200 hover:text-white transition-colors"
+        className="underline underline-offset-2 text-madder hover:text-indigo transition-colors"
       >
         {label}
       </a>
@@ -78,9 +85,9 @@ function ContactForm({ onSent }: { onSent: () => void }) {
   if (sent) {
     return (
       <div className="flex flex-col items-center gap-2 py-4 text-center">
-        <CheckCircle size={28} className="text-green-400" />
-        <p className="text-sm font-medium text-zinc-200">Message sent!</p>
-        <p className="text-xs text-zinc-500">Check your inbox — Favour will be in touch soon.</p>
+        <CheckCircle size={28} className="text-indigo" />
+        <p className="text-sm font-medium text-indigo">Message sent!</p>
+        <p className="text-xs text-indigo/75">Check your inbox — Favour will be in touch soon.</p>
       </div>
     );
   }
@@ -92,7 +99,7 @@ function ContactForm({ onSent }: { onSent: () => void }) {
         onChange={(e) => setName(e.target.value)}
         placeholder="Your name"
         required
-        className="w-full bg-zinc-800/60 text-zinc-100 placeholder:text-zinc-600 text-xs px-3 py-2.5 rounded-xl border border-zinc-700/40 outline-none focus:border-zinc-500/60 transition-all"
+        className="w-full bg-white text-indigo placeholder:text-indigo/80 text-xs px-3 py-2.5 rounded-sm border border-indigo/30 outline-none focus:border-indigo transition-all"
       />
       <input
         type="email"
@@ -100,14 +107,14 @@ function ContactForm({ onSent }: { onSent: () => void }) {
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Your email"
         required
-        className="w-full bg-zinc-800/60 text-zinc-100 placeholder:text-zinc-600 text-xs px-3 py-2.5 rounded-xl border border-zinc-700/40 outline-none focus:border-zinc-500/60 transition-all"
+        className="w-full bg-white text-indigo placeholder:text-indigo/80 text-xs px-3 py-2.5 rounded-sm border border-indigo/30 outline-none focus:border-indigo transition-all"
       />
       <input
         type="tel"
         value={phone}
         onChange={(e) => setPhone(e.target.value)}
         placeholder="WhatsApp number (optional, with country code)"
-        className="w-full bg-zinc-800/60 text-zinc-100 placeholder:text-zinc-600 text-xs px-3 py-2.5 rounded-xl border border-zinc-700/40 outline-none focus:border-zinc-500/60 transition-all"
+        className="w-full bg-white text-indigo placeholder:text-indigo/80 text-xs px-3 py-2.5 rounded-sm border border-indigo/30 outline-none focus:border-indigo transition-all"
       />
       <textarea
         value={message}
@@ -115,14 +122,14 @@ function ContactForm({ onSent }: { onSent: () => void }) {
         placeholder="Brief description of what you need..."
         required
         rows={3}
-        className="w-full bg-zinc-800/60 text-zinc-100 placeholder:text-zinc-600 text-xs px-3 py-2.5 rounded-xl border border-zinc-700/40 outline-none focus:border-zinc-500/60 transition-all resize-none"
+        className="w-full bg-white text-indigo placeholder:text-indigo/80 text-xs px-3 py-2.5 rounded-sm border border-indigo/30 outline-none focus:border-indigo transition-all resize-none"
       />
-      {error && <p className="text-xs text-red-400">{error}</p>}
+      {error && <p className="text-xs text-madder">{error}</p>}
       <button
         type="submit"
         disabled={sending || !name.trim() || !email.trim() || !message.trim()}
-        className="w-full py-2.5 rounded-xl text-xs font-medium text-zinc-100 bg-zinc-700 hover:bg-zinc-600
-          disabled:opacity-40 disabled:cursor-not-allowed transition-all border border-zinc-600/50"
+        className="w-full py-2.5 rounded-sm text-xs font-medium text-indigo bg-white hover:bg-indigo/5
+          disabled:opacity-40 disabled:cursor-not-allowed transition-all border border-indigo/30"
       >
         {sending ? "Sending…" : "Send to Favour"}
       </button>
@@ -138,6 +145,7 @@ export function ChatWidget() {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const { launcherRef, panelRef, panelStyle, updateAnchor } = useChatPanelAnchor(open);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -221,6 +229,19 @@ export function ChatWidget() {
     }
   };
 
+  const sendRef = useRef(send);
+  sendRef.current = send;
+
+  useEffect(() => {
+    const onOpenRequest = (event: Event): void => {
+      setOpen(true);
+      const question = (event as CustomEvent<ChatOpenDetail>).detail?.question;
+      if (question) sendRef.current(question);
+    };
+    window.addEventListener(CHAT_OPEN_EVENT, onOpenRequest);
+    return () => window.removeEventListener(CHAT_OPEN_EVENT, onOpenRequest);
+  }, []);
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     send(input);
@@ -229,46 +250,39 @@ export function ChatWidget() {
   return (
     <>
       {/* Chat panel */}
+      {/* From lg up the panel sits beside the launcher: --chat-x/--chat-y come from
+          useChatPanelAnchor and the clamps keep it inside the viewport. */}
       <div
-        className={`fixed bottom-24 right-5 z-50 w-[340px] sm:w-[380px] h-[520px] flex flex-col rounded-2xl overflow-hidden
-          transition-all duration-300 ease-out origin-bottom-right
+        ref={panelRef}
+        style={panelStyle}
+        inert={!open}
+        className={`fixed bottom-20 left-3 right-3 z-50 [--chat-w:380px] [--chat-h:min(520px,70dvh)] [--chat-edge:0.75rem] h-[var(--chat-h)] flex flex-col rounded-sm overflow-hidden border border-indigo/30 bg-cloud shadow-[0_32px_64px_-24px_rgba(43,47,127,0.6)]
+          lg:inset-auto lg:w-[var(--chat-w)] lg:left-[clamp(var(--chat-edge),var(--chat-x,100vw),calc(100vw_-_var(--chat-w)_-_var(--chat-edge)))] lg:top-[clamp(var(--chat-edge),var(--chat-y,100vh),calc(100dvh_-_var(--chat-h)_-_var(--chat-edge)))]
+          transition-[opacity,transform] duration-200 ease-out-strong origin-bottom-right lg:origin-[var(--chat-origin,bottom_right)]
           ${open ? "opacity-100 scale-100 translate-y-0 pointer-events-auto" : "opacity-0 scale-95 translate-y-3 pointer-events-none"}`}
-        style={{
-          background: "linear-gradient(180deg, #111113 0%, #0c0c0e 100%)",
-          boxShadow:
-            "0 32px 64px -16px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.07)",
-        }}
       >
         {/* Top shimmer line */}
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-zinc-500/40 to-transparent z-10" />
+        <div className="absolute top-0 left-0 right-0 h-1 bg-saffron z-10" />
 
         {/* Header */}
-        <div className="relative flex items-center justify-between px-4 py-3.5 border-b border-white/[0.06] bg-zinc-900/60 backdrop-blur-sm flex-shrink-0">
+        <div className="relative flex items-center justify-between px-4 py-3.5 border-b border-indigo/25 bg-white flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="relative flex-shrink-0">
-              <div
-                className="w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold text-zinc-200 border border-white/10"
-                style={{
-                  background:
-                    "linear-gradient(135deg, #3f3f46 0%, #27272a 100%)",
-                }}
-              >
-                FI
-              </div>
-              <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-400 rounded-full border-[2px] border-zinc-950 animate-pulse" />
+              <ChatBotMascot isHeadOnly className="w-12 h-auto" />
+              <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 hidden rounded-full border-[2px] border-indigo/30 animate-pulse" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-zinc-100 leading-none tracking-tight">
+              <p className="text-sm font-semibold text-indigo leading-none tracking-tight">
                 Favour's AI
               </p>
-              <p className="text-[11px] text-zinc-500 mt-1 leading-none">
+              <p className="text-[11px] text-indigo/75 mt-1 leading-none">
                 Ask me anything
               </p>
             </div>
           </div>
           <button
             onClick={() => setOpen(false)}
-            className="w-7 h-7 rounded-lg flex items-center justify-center text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800/80 transition-all"
+            className="w-7 h-7 rounded-sm flex items-center justify-center text-indigo/75 hover:text-indigo hover:bg-indigo/5 transition-all"
             aria-label="Close chat"
           >
             <X size={15} />
@@ -279,21 +293,12 @@ export function ChatWidget() {
         <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 min-h-0">
           {messages.length === 0 && (
             <div className="flex flex-col items-center gap-4 pt-3">
-              <div
-                className="w-12 h-12 rounded-2xl flex items-center justify-center border border-white/10"
-                style={{
-                  background:
-                    "linear-gradient(135deg, #3f3f46 0%, #1c1c1f 100%)",
-                  boxShadow: "0 8px 24px rgba(0,0,0,0.4)",
-                }}
-              >
-                <Sparkles size={20} className="text-zinc-300" />
-              </div>
+              <ChatBotMascot className="w-16 h-auto" />
               <div className="text-center space-y-1.5">
-                <p className="text-sm font-semibold text-zinc-200">
-                  Hey there! 👋
+                <p className="text-sm font-semibold text-indigo">
+                  Hey there!
                 </p>
-                <p className="text-xs text-zinc-500 max-w-[200px] leading-relaxed mx-auto">
+                <p className="text-xs text-indigo/75 max-w-[200px] leading-relaxed mx-auto">
                   I can tell you all about Favour's skills, projects, and how
                   to reach him.
                 </p>
@@ -303,10 +308,10 @@ export function ChatWidget() {
                   <button
                     key={s}
                     onClick={() => send(s)}
-                    className="w-full text-left text-xs px-3.5 py-2.5 rounded-xl border border-zinc-800/80 bg-zinc-900/40 text-zinc-400
-                      hover:border-zinc-700 hover:text-zinc-200 hover:bg-zinc-800/50 transition-all duration-150 flex items-center gap-2.5 group"
+                    className="w-full text-left text-xs px-3.5 py-2.5 rounded-sm border border-indigo/30 bg-white text-indigo/75
+                      hover:border-indigo hover:text-indigo hover:bg-indigo/5 transition-all duration-150 flex items-center gap-2.5 group"
                   >
-                    <span className="text-zinc-700 group-hover:text-zinc-500 transition-colors">›</span>
+                    <span className="text-indigo/75 group-hover:text-indigo transition-colors">›</span>
                     {s}
                   </button>
                 ))}
@@ -318,27 +323,22 @@ export function ChatWidget() {
             if (m.role === "options") {
               return (
                 <div key={i} className="flex justify-start gap-2 items-start">
-                  <div
-                    className="flex-shrink-0 w-6 h-6 rounded-lg flex items-center justify-center mt-0.5 border border-white/10"
-                    style={{ background: "linear-gradient(135deg, #3f3f46 0%, #27272a 100%)" }}
-                  >
-                    <span className="text-[8px] font-bold text-zinc-300">FI</span>
-                  </div>
+                  <ChatBotMascot isHeadOnly className="flex-shrink-0 w-8 h-auto mt-0.5" />
                   <div className="flex flex-col gap-2 max-w-[78%]">
                     <button
                       onClick={() => send("I'd like to see Favour's contact details")}
-                      className="text-left text-xs px-3.5 py-2.5 rounded-xl border border-zinc-800/80 bg-zinc-900/40 text-zinc-300
-                        hover:border-zinc-600 hover:text-zinc-100 hover:bg-zinc-800/60 transition-all duration-150 flex items-center gap-2 group"
+                      className="text-left text-xs px-3.5 py-2.5 rounded-sm border border-indigo/30 bg-white text-indigo
+                        hover:border-indigo hover:text-indigo hover:bg-indigo/5 transition-all duration-150 flex items-center gap-2 group"
                     >
-                      <span className="text-zinc-600 group-hover:text-zinc-400 transition-colors">›</span>
+                      <span className="text-indigo/75 group-hover:text-indigo transition-colors">›</span>
                       Share Favour's contact details
                     </button>
                     <button
                       onClick={() => send("I'd like to leave my details for Favour to reach out")}
-                      className="text-left text-xs px-3.5 py-2.5 rounded-xl border border-zinc-800/80 bg-zinc-900/40 text-zinc-300
-                        hover:border-zinc-600 hover:text-zinc-100 hover:bg-zinc-800/60 transition-all duration-150 flex items-center gap-2 group"
+                      className="text-left text-xs px-3.5 py-2.5 rounded-sm border border-indigo/30 bg-white text-indigo
+                        hover:border-indigo hover:text-indigo hover:bg-indigo/5 transition-all duration-150 flex items-center gap-2 group"
                     >
-                      <span className="text-zinc-600 group-hover:text-zinc-400 transition-colors">›</span>
+                      <span className="text-indigo/75 group-hover:text-indigo transition-colors">›</span>
                       Leave my details for Favour
                     </button>
                   </div>
@@ -349,17 +349,9 @@ export function ChatWidget() {
             if (m.role === "form") {
               return (
                 <div key={i} className="flex justify-start gap-2 items-start">
-                  <div
-                    className="flex-shrink-0 w-6 h-6 rounded-lg flex items-center justify-center mt-0.5 border border-white/10"
-                    style={{
-                      background:
-                        "linear-gradient(135deg, #3f3f46 0%, #27272a 100%)",
-                    }}
-                  >
-                    <span className="text-[8px] font-bold text-zinc-300">FI</span>
-                  </div>
-                  <div className="flex-1 bg-zinc-900/80 border border-white/[0.06] rounded-2xl rounded-tl-sm p-3.5">
-                    <p className="text-xs font-medium text-zinc-300 mb-3">
+                  <ChatBotMascot isHeadOnly className="flex-shrink-0 w-8 h-auto mt-0.5" />
+                  <div className="flex-1 bg-white border border-indigo/25 rounded-sm p-3.5">
+                    <p className="text-xs font-medium text-indigo mb-3">
                       Drop your details below:
                     </p>
                     <ContactForm
@@ -370,7 +362,7 @@ export function ChatWidget() {
                           {
                             role: "assistant",
                             content:
-                              "Your message has been sent to Favour! He'll get back to you soon. 🎉",
+                              "Your message has been sent to Favour! He'll get back to you soon.",
                           },
                         ]);
                       }}
@@ -386,30 +378,22 @@ export function ChatWidget() {
                 className={`flex items-end gap-2 ${m.role === "user" ? "justify-end" : "justify-start"}`}
               >
                 {m.role === "assistant" && (
-                  <div
-                    className="flex-shrink-0 w-6 h-6 rounded-lg flex items-center justify-center mb-0.5 border border-white/10"
-                    style={{
-                      background:
-                        "linear-gradient(135deg, #3f3f46 0%, #27272a 100%)",
-                    }}
-                  >
-                    <span className="text-[8px] font-bold text-zinc-300">FI</span>
-                  </div>
+                  <ChatBotMascot isHeadOnly className="flex-shrink-0 w-8 h-auto mb-0.5" />
                 )}
                 <div
-                  className={`max-w-[78%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${
+                  className={`max-w-[78%] rounded-sm px-3.5 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${
                     m.role === "user"
-                      ? "bg-zinc-800 text-zinc-100 rounded-tr-sm border border-zinc-700/40"
-                      : "bg-zinc-900/80 text-zinc-300 rounded-tl-sm border border-white/[0.06]"
+                      ? "bg-indigo text-white"
+                      : "bg-white text-indigo border border-indigo/25"
                   }`}
                 >
                   {m.content ? (
                     renderContent(m.content)
                   ) : (
                     <span className="flex gap-1 items-center py-0.5">
-                      <span className="w-1.5 h-1.5 bg-zinc-600 rounded-full animate-bounce [animation-delay:0ms]" />
-                      <span className="w-1.5 h-1.5 bg-zinc-600 rounded-full animate-bounce [animation-delay:150ms]" />
-                      <span className="w-1.5 h-1.5 bg-zinc-600 rounded-full animate-bounce [animation-delay:300ms]" />
+                      <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse [animation-delay:0ms]" />
+                      <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse [animation-delay:150ms]" />
+                      <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse [animation-delay:300ms]" />
                     </span>
                   )}
                 </div>
@@ -420,7 +404,7 @@ export function ChatWidget() {
         </div>
 
         {/* Input */}
-        <div className="px-4 py-3.5 border-t border-white/[0.06] bg-zinc-900/60 backdrop-blur-sm flex-shrink-0">
+        <div className="px-4 py-3.5 border-t border-indigo/25 bg-white flex-shrink-0">
           <form onSubmit={handleSubmit} className="flex items-center gap-2">
             <input
               ref={inputRef}
@@ -428,16 +412,16 @@ export function ChatWidget() {
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask about Favour..."
               disabled={loading}
-              className="flex-1 bg-zinc-800/60 text-zinc-100 placeholder:text-zinc-600 text-sm px-3.5 py-2.5 rounded-xl
-                border border-zinc-700/40 outline-none focus:border-zinc-500/60 focus:bg-zinc-800/80
+              className="flex-1 bg-white text-indigo placeholder:text-indigo/80 text-sm px-3.5 py-2.5 rounded-sm
+                border border-indigo/30 outline-none focus:border-indigo 
                 transition-all duration-150 disabled:opacity-50"
             />
             <button
               type="submit"
               disabled={!input.trim() || loading}
-              className="w-9 h-9 rounded-xl flex items-center justify-center text-zinc-300
+              className="w-9 h-9 rounded-sm flex items-center justify-center text-indigo
                 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-150
-                hover:scale-105 active:scale-95 border border-zinc-700/60 bg-zinc-800 hover:bg-zinc-700 hover:border-zinc-600"
+                hover:scale-105 active:scale-95 border border-indigo/30 bg-white hover:bg-indigo/5 hover:border-indigo"
               aria-label="Send message"
             >
               <Send size={14} />
@@ -446,34 +430,12 @@ export function ChatWidget() {
         </div>
       </div>
 
-      {/* Floating button */}
-      <button
-        onClick={() => setOpen((o) => !o)}
-        className="fixed bottom-5 right-5 z-50 group"
-        aria-label={open ? "Close chat" : "Open chat"}
-      >
-        <div
-          className="relative w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 active:scale-95"
-          style={{
-            background: "linear-gradient(135deg, #3f3f46 0%, #18181b 100%)",
-            boxShadow:
-              "0 8px 32px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.09), inset 0 1px 0 rgba(255,255,255,0.07)",
-          }}
-        >
-          <div
-            className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-            style={{ boxShadow: "0 0 24px rgba(161,161,170,0.18)" }}
-          />
-          {open ? (
-            <X size={19} className="text-zinc-300 relative z-10" />
-          ) : (
-            <div className="relative z-10">
-              <Sparkles size={21} className="text-zinc-200" />
-              <span className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-green-400 rounded-full border-2 border-zinc-900 shadow-sm" />
-            </div>
-          )}
-        </div>
-      </button>
+      <ChatLauncher
+        ref={launcherRef}
+        isOpen={open}
+        onToggle={() => setOpen((o) => !o)}
+        onMoved={updateAnchor}
+      />
     </>
   );
 }

@@ -9,7 +9,21 @@ interface ParticlesProps {
 	staticity?: number;
 	ease?: number;
 	refresh?: boolean;
+	color?: string;
 }
+
+type Circle = {
+	x: number;
+	y: number;
+	translateX: number;
+	translateY: number;
+	size: number;
+	alpha: number;
+	targetAlpha: number;
+	dx: number;
+	dy: number;
+	magnetism: number;
+};
 
 export default function Particles({
 	className = "",
@@ -17,11 +31,12 @@ export default function Particles({
 	staticity = 50,
 	ease = 50,
 	refresh = false,
+	color = "255, 255, 255",
 }: ParticlesProps) {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const canvasContainerRef = useRef<HTMLDivElement>(null);
 	const context = useRef<CanvasRenderingContext2D | null>(null);
-	const circles = useRef<any[]>([]);
+	const circles = useRef<Circle[]>([]);
 	const mousePosition = useMousePosition();
 	const mouse = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 	const canvasSize = useRef<{ w: number; h: number }>({ w: 0, h: 0 });
@@ -65,19 +80,6 @@ export default function Particles({
 				mouse.current.y = y;
 			}
 		}
-	};
-
-	type Circle = {
-		x: number;
-		y: number;
-		translateX: number;
-		translateY: number;
-		size: number;
-		alpha: number;
-		targetAlpha: number;
-		dx: number;
-		dy: number;
-		magnetism: number;
 	};
 
 	const resizeCanvas = () => {
@@ -124,7 +126,7 @@ export default function Particles({
 			context.current.translate(translateX, translateY);
 			context.current.beginPath();
 			context.current.arc(x, y, size, 0, 2 * Math.PI);
-			context.current.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+			context.current.fillStyle = `rgba(${color}, ${alpha})`;
 			context.current.fill();
 			context.current.setTransform(dpr, 0, 0, dpr, 0, 0);
 

@@ -1,75 +1,64 @@
-"use client";
-import { Mail } from "lucide-react";
-import Link from "next/link";
+import type { JSX } from "react";
+import type { Metadata } from "next";
 
-const GithubIcon = ({ size = 20 }: { size?: number }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 0C5.373 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
-  </svg>
-);
+import { SITE, SOCIALS } from "@/lib/site";
 
-const LinkedinIcon = ({ size = 20 }: { size?: number }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M19 0H5C2.239 0 0 2.239 0 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5V5c0-2.761-2.238-5-5-5zM8 19H5V8h3v11zM6.5 6.732c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zM20 19h-3v-5.604c0-3.368-4-3.113-4 0V19h-3V8h3v1.765c1.396-2.586 7-2.777 7 2.476V19z"/>
-  </svg>
-);
-import { Navigation } from "../components/nav";
-import { Card } from "../components/card";
+import { ContactForm } from "../components/canopy/ContactForm";
+import { SilkCanopy } from "../components/canopy/SilkCanopy";
+import { SiteShell } from "../components/canopy/SiteShell";
 
-const socials = [
-  {
-    icon: <LinkedinIcon size={20} />,
-    href: "https://www.linkedin.com/in/favour-taiwo-8b9b5a200",
-    label: "Linkedin",
-    handle: "@Favour Israel",
-  },
-  {
-    icon: <Mail size={20} />,
-    href: "mailto:favour.israel.taiwo@outlook.com",
-    label: "Email",
-    handle: "favour.israel.taiwo@outlook.com",
-  },
-  {
-    icon: <GithubIcon size={20} />,
-    href: "https://github.com/Izzy4999",
-    label: "Github",
-    handle: "Izzy4999",
-  },
-];
+export const metadata: Metadata = {
+	title: "Contact",
+	description: "Hire Favour Israel Taiwo or ask about a project.",
+};
 
-export default function Example() {
-  return (
-    <div className=" bg-gradient-to-tl from-zinc-900/0 via-zinc-900 to-zinc-900/0">
-      <Navigation />
-      <div className="container flex items-center justify-center min-h-screen px-4 mx-auto">
-        <div className="grid w-full grid-cols-1 gap-8 mx-auto mt-32 sm:mt-0 sm:grid-cols-3 lg:gap-16">
-          {socials.map((s) => (
-            <Card>
-              <Link
-                href={s.href}
-                target="_blank"
-                className="p-4 relative flex flex-col items-center gap-4 duration-700 group md:gap-8 md:py-24  lg:pb-48  md:p-16"
-              >
-                <span
-                  className="absolute w-px h-2/3 bg-gradient-to-b from-zinc-500 via-zinc-500/50 to-transparent"
-                  aria-hidden="true"
-                />
-                <span className="relative z-10 flex items-center justify-center w-12 h-12 text-sm duration-1000 border rounded-full text-zinc-200 group-hover:text-white group-hover:bg-zinc-900 border-zinc-500 bg-zinc-900 group-hover:border-zinc-200 drop-shadow-orange">
-                  {s.icon}
-                </span>{" "}
-                <div className="z-10 flex flex-col items-center">
-                  <span className="lg:text-xl font-medium duration-150 xl:text-3xl text-zinc-200 group-hover:text-white font-display">
-                    {s.handle}
-                  </span>
-                  <span className="mt-4 text-sm text-center duration-1000 text-zinc-400 group-hover:text-zinc-200">
-                    {s.label}
-                  </span>
-                </div>
-              </Link>
-            </Card>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
+const DETAIL_LINK_CLASS = "block [overflow-wrap:anywhere] text-lg tracking-wide text-indigo underline-offset-4 hover:underline";
+
+const ContactPage = (): JSX.Element => {
+	return (
+		<SiteShell>
+			<header className="relative overflow-hidden border-b border-indigo/40 px-6 pb-12 pt-40 lg:px-12 lg:pt-48">
+				<div aria-hidden="true" className="absolute inset-0 bg-gradient-to-b from-sky to-cloud" />
+				<SilkCanopy className="absolute inset-x-0 top-0 h-64 max-lg:-left-[30%] lg:left-[20%]" />
+				<div className="relative z-10">
+					<h1 className="text-[clamp(2.5rem,5vw,4.5rem)] font-light uppercase leading-[1.1] tracking-[0.16em] text-indigo">
+						Say hello
+					</h1>
+					<p className="mt-5 max-w-[52ch] text-lg leading-relaxed text-indigo">
+						Tell me about the role or the product. I reply by email.
+					</p>
+				</div>
+			</header>
+
+			<div className="lg:grid lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)]">
+				<section aria-label="Contact form" className="border-b border-indigo/40 p-6 lg:border-b-0 lg:border-r lg:p-12">
+					<ContactForm />
+				</section>
+
+				<section id="socials" aria-labelledby="socials-heading" className="scroll-mt-8 p-6 lg:p-12">
+					<h2 id="socials-heading" className="caps mb-6 border-b border-indigo/40 pb-4 text-indigo">
+						Email and socials
+					</h2>
+					<ul className="grid gap-6">
+						<li>
+							<span className="caps mb-2 block text-indigo">Email</span>
+							<a href={`mailto:${SITE.email}`} className={DETAIL_LINK_CLASS}>
+								{SITE.email}
+							</a>
+						</li>
+						{SOCIALS.map((social) => (
+							<li key={social.label}>
+								<span className="caps mb-2 block text-indigo">{social.label}</span>
+								<a href={social.href} target="_blank" rel="noopener noreferrer" className={DETAIL_LINK_CLASS}>
+									{social.href.replace("https://", "").replace("www.", "")}
+								</a>
+							</li>
+						))}
+					</ul>
+				</section>
+			</div>
+		</SiteShell>
+	);
+};
+
+export default ContactPage;

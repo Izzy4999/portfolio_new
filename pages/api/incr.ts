@@ -1,7 +1,6 @@
-import { Redis } from "@upstash/redis";
 import { NextRequest, NextResponse } from "next/server";
+import { incrProjectView, setIfNewViewer } from "@/lib/redis";
 
-const redis = Redis.fromEnv();
 export const config = {
   runtime: "edge",
 };
@@ -37,14 +36,11 @@ export default async function incr(req: NextRequest): Promise<NextResponse> {
       .join("");
 
     // deduplicate the ip for each slug
-    const isNew = await redis.set(["deduplicate", hash, slug].join(":"), true, {
-      nx: true,
-      ex: 24 * 60 * 60,
-    });
+    const isNew = await setIfNewViewer(hash, slug);
     if (!isNew) {
       return new NextResponse(null, { status: 202 });
     }
   }
-  await redis.incr(["pageviews", "projects", slug].join(":"));
+  await incrProjectView(slug);
   return new NextResponse(null, { status: 202 });
 }

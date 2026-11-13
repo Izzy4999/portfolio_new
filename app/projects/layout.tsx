@@ -1,9 +1,9 @@
-export default function ProjectsLayout({
-	children,
-}: { children: React.ReactNode }) {
-	return (
-		<div className="relative min-h-screen bg-gradient-to-tl from-zinc-900 via-zinc-400/10 to-zinc-900 ">
-			{children}
-		</div>
-	);
-}
+import type { JSX, ReactNode } from "react";
+
+import { SiteShell } from "../components/canopy/SiteShell";
+
+const ProjectsLayout = ({ children }: { children: ReactNode }): JSX.Element => {
+	return <SiteShell>{children}</SiteShell>;
+};
+
+export default ProjectsLayout;
